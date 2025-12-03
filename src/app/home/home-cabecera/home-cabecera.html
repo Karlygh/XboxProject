@@ -1,0 +1,39 @@
+<section class="hero" id="home">
+    <div class="carousel-container">
+        <div class="carousel" id="carousel">
+            <div 
+                *ngFor="let item of carouselData; let i = index" 
+                class="carousel-item" 
+                [attr.data-index]="i"
+                [ngStyle]="getCarouselItemStyles(i)"
+                (click)="goToSlide(i)"
+            >
+                <div class="card game-card">
+                    <div class="card-image">
+                        <img [src]="ASSETS_PATH + item.image" [alt]="item.title">
+                    </div>
+                    <div class="card-info">
+                        <p class="card-description">{{item.description}}</p>
+                        <div class="card-tech">
+                            <span class="tech-badge" *ngFor="let tech of item.tech">{{tech}}</span>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="card-title-external">{{item.title}}</h3>
+            </div>
+        </div>
+        
+        <div class="carousel-controls">
+            <button class="carousel-btn" id="prevBtn" (click)="prevSlide()">‹</button>
+            <div class="carousel-indicators" id="indicators">
+                <div 
+                    *ngFor="let item of carouselData; let i = index" 
+                    class="indicator" 
+                    [class.active]="i === currentIndex"
+                    (click)="goToSlide(i)"
+                ></div>
+            </div>
+            <button class="carousel-btn" id="nextBtn" (click)="nextSlide()">›</button>
+        </div>
+    </div>
+</section>
