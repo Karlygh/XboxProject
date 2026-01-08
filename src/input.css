@@ -1,1 +1,34 @@
 @import "tailwindcss";
+
+/* Tailwind v4 custom theme configuration */
+@layer theme {
+  :root {
+    /* Custom screens (breakpoints) */
+    --breakpoint-fold-closed: 280px;
+    --breakpoint-fold-open: 512px;
+    --breakpoint-tablet-sm: 576px;
+    --breakpoint-tablet-md: 768px;
+    --breakpoint-tablet-lg: 1024px;
+    --breakpoint-desktop-sm: 1280px;
+    --breakpoint-desktop-lg: 1536px;
+
+    /* Custom spacing */
+    --spacing-18: 4.5rem;
+    --spacing-84: 21rem;
+    --spacing-96: 24rem;
+
+    /* Custom font sizes */
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 1.875rem;
+    --font-size-4xl: 2.25rem;
+    --font-size-5xl: 3rem;
+
+    /* Custom border width */
+    --border-width-3: 3px;
+  }
+}

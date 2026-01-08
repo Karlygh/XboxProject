@@ -30,7 +30,8 @@
               }
             ],
             "styles": [
-              "src/output.css"
+              "src/input.css",
+              "src/styles.css"
             ],
             "server": "src/main.server.ts",
             "outputMode": "server",
