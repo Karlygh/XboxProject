@@ -1,0 +1,102 @@
+<div class="parallax-wrapper">
+  <!-- Sección 1 -->
+  <section class="parallax-section" [class.active]="currentSection === 0">
+    <div class="parallax-background" 
+         [style.transform]="'scale(' + (1 + scrollProgress * 0.2) + ')'">
+      <img [src]="ASSETS_PATH + 'halo-hero.jpeg'" alt="Halo Infinite">
+    </div>
+    <div class="parallax-content" 
+         [style.opacity]="1 - scrollProgress"
+         [style.transform]="'translateY(' + (scrollProgress * 100) + 'px)'">
+      <span class="exclusive-tag">EXCLUSIVO XBOX</span>
+      <h2 class="game-title">Halo Infinite</h2>
+      <p class="game-description">
+        El legendario Spartan regresa en la aventura más épica. 
+        Explora mundos abiertos y domina el multijugador.
+      </p>
+      <button class="cta-button" (click)="openGameModal(exclusiveGames[0])">
+        Descubrir más
+      </button>
+    </div>
+  </section>
+
+  <!-- Sección 2 -->
+  <section class="parallax-section" [class.active]="currentSection === 1">
+    <div class="parallax-background" 
+         [style.transform]="'scale(' + (1 + scrollProgress * 0.2) + ')'">
+      <img [src]="ASSETS_PATH + 'forza-hero.jpg'" alt="Forza Horizon 5">
+    </div>
+    <div class="parallax-content" 
+         [style.opacity]="1 - scrollProgress"
+         [style.transform]="'translateY(' + (scrollProgress * 100) + 'px)'">
+      <span class="exclusive-tag">EXCLUSIVO XBOX</span>
+      <h2 class="game-title">Forza Horizon 5</h2>
+      <p class="game-description">
+        Explora los vibrantes paisajes de México. 
+        La experiencia de carreras más espectacular.
+      </p>
+      <button class="cta-button" (click)="openGameModal(exclusiveGames[1])">
+        Descubrir más
+      </button>
+    </div>
+  </section>
+
+  <!-- Sección 3 -->
+  <section class="parallax-section" [class.active]="currentSection === 2">
+    <div class="parallax-background" 
+         [style.transform]="'scale(' + (1 + scrollProgress * 0.2) + ')'">
+      <img [src]="ASSETS_PATH + 'gears-hero.jpg'" alt="Gears 5">
+    </div>
+    <div class="parallax-content" 
+         [style.opacity]="1 - scrollProgress"
+         [style.transform]="'translateY(' + (scrollProgress * 100) + 'px)'">
+      <span class="exclusive-tag">EXCLUSIVO XBOX</span>
+      <h2 class="game-title">Gears 5</h2>
+      <p class="game-description">
+        Acción intensa y cooperativa. 
+        La saga definitiva continúa con Kait Diaz.
+      </p>
+      <button class="cta-button" (click)="openGameModal(exclusiveGames[2])">
+        Descubrir más
+      </button>
+    </div>
+  </section>
+
+  <!-- Sección 4 -->
+  <section class="parallax-section" [class.active]="currentSection === 3">
+    <div class="parallax-background" 
+         [style.transform]="'scale(' + (1 + scrollProgress * 0.2) + ')'">
+      <img [src]="ASSETS_PATH + 'starfield-hero.jpg'" alt="Starfield">
+    </div>
+    <div class="parallax-content" 
+         [style.opacity]="1 - scrollProgress"
+         [style.transform]="'translateY(' + (scrollProgress * 100) + 'px)'">
+      <span class="exclusive-tag">EXCLUSIVO XBOX</span>
+      <h2 class="game-title">Starfield</h2>
+      <p class="game-description">
+        Explora el universo en la mayor aventura espacial. 
+        Más de 1000 planetas te esperan.
+      </p>
+      <button class="cta-button" (click)="openGameModal(exclusiveGames[3])">
+        Descubrir más
+      </button>
+    </div>
+  </section>
+
+  <!-- Indicadores de progreso -->
+  <div class="scroll-indicators" [class.visible]="isInExclusivesSection">
+    <div *ngFor="let section of [0,1,2,3]; let i = index" 
+         class="indicator"
+         [class.active]="currentSection === i"
+         (click)="scrollToSection(i)">
+    </div>
+  </div>
+
+  <!-- Indicador de scroll -->
+  <div class="scroll-hint" [class.hidden]="currentSection > 0">
+    <span>Desliza para explorar</span>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M12 5v14M19 12l-7 7-7-7"/>
+    </svg>
+  </div>
+</div>

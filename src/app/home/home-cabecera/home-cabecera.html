@@ -1,98 +1,39 @@
-<section 
-  class="min-h-screen flex items-start justify-center relative overflow-hidden px-4 py-8 sm:px-6 sm:py-12 md:px-8 md:py-16 lg:px-10 lg:py-20"
-  style="background-image: url('assets/images/fondo.png'); background-color: #05051a; background-size: cover; background-position: center; background-repeat: no-repeat;"
-  id="home">
-  
-  <!-- Overlay oscuro -->
-  <div class="absolute inset-0 bg-black/70 z-0"></div>
-  
-  <!-- Contenedor del Carousel -->
-  <div 
-    class="relative z-10 w-full max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl h-100 sm:h-450px md:h-500px lg:h-550px xl:h-600px pt-4 pb-16 sm:pb-20 md:pb-24"
-    style="perspective: 1000px;">
-    
-    <!-- Carousel 3D -->
-    <div class="w-full h-full relative" style="transform-style: preserve-3d;">
-      
-      <!-- Items del carousel -->
-      <div 
-        *ngFor="let item of carouselData; let i = index" 
-        class="absolute cursor-pointer transition-all duration-700 ease-out w-48 h-72 sm:w-52 sm:h-80 md:w-56 md:h-84 lg:w-60 lg:h-96 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" 
-        [ngStyle]="getCarouselItemStyles(i)"
-        (click)="goToSlide(i)"
-        style="transform-style: preserve-3d; transform-origin: center center;">
-        
-        <!-- Tarjeta del juego -->
-        <div class="w-full h-full relative rounded-2xl overflow-hidden shadow-2xl border border-red-900/10 bg-[#1a1a2e]">
-          
-          <!-- Imagen de la tarjeta -->
-          <div class="absolute inset-0">
-            <img 
-              [src]="ASSETS_PATH + item.image" 
-              [alt]="item.title"
-              class="w-full h-full object-cover transition-all duration-500"
-              [class.brightness-50]="i !== currentIndex"
-              [class.grayscale]="i !== currentIndex"
-              [class.brightness-100]="i === currentIndex">
-          </div>
-          
-          <!-- Overlay con descripción -->
-          <div 
-            class="absolute bottom-0 w-full p-4 text-white transition-all duration-300"
-            style="background: linear-gradient(0deg, #000000 0%, transparent 100%);">
-            <p 
-              class="text-xs sm:text-sm text-gray-300 opacity-0 hover:opacity-100 transition-opacity duration-300 leading-relaxed">
-              {{ item.description }}
-            </p>
-          </div>
+<section class="hero" id="home">
+    <div class="carousel-container">
+        <div class="carousel" id="carousel">
+            <div 
+                *ngFor="let item of carouselData; let i = index" 
+                class="carousel-item" 
+                [attr.data-index]="i"
+                [ngStyle]="getCarouselItemStyles(i)"
+                (click)="openGameModal(item)"
+            >
+                <div class="card game-card">
+                    <div class="card-image">
+                        <img [src]="ASSETS_PATH + item.image" [alt]="item.title">
+                    </div>
+                    <div class="card-info">
+                        <p class="card-description">{{item.description}}</p>
+                        <div class="card-tech">
+                            <span class="tech-badge" *ngFor="let tech of item.tech">{{tech}}</span>
+                        </div>
+                    </div>
+                </div>
+                <h3 class="card-title-external">{{item.title}}</h3>
+            </div>
         </div>
         
-        <!-- Título externo (debajo de la tarjeta) -->
-        <h3 
-          class="absolute left-1/2 -translate-x-1/2 text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-black uppercase text-center whitespace-nowrap transition-all duration-300"
-          [class.text-green-500]="i !== currentIndex"
-          [class.text-white]="i === currentIndex"
-          [class.-bottom-12]="i !== currentIndex"
-          [class.-bottom-14]="i === currentIndex"
-          style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 10px rgba(98, 145, 28, 0.6);">
-          {{ item.title }}
-        </h3>
-      </div>
-    </div>
-    
-    <!-- Controles del carousel -->
-    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 flex items-center justify-center gap-8 md:gap-12 lg:gap-16 z-20 w-full max-w-md">
-      
-      <!-- Botón Anterior -->
-      <button 
-        (click)="prevSlide()"
-        class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-transparent border-2 border-green-500 rounded-full text-green-500 text-2xl sm:text-3xl md:text-4xl cursor-pointer transition-all duration-300 flex items-center justify-center hover:bg-purple-600 hover:border-purple-600 hover:text-white hover:shadow-lg hover:shadow-purple-500/50"
-        aria-label="Anterior">
-        ‹
-      </button>
-      
-      <!-- Indicadores -->
-      <div class="flex gap-2 bg-green-500/10 px-3 py-2 rounded backdrop-blur-sm">
-        <div 
-          *ngFor="let item of carouselData; let i = index" 
-          (click)="goToSlide(i)"
-          class="h-1.5 rounded-full cursor-pointer transition-all duration-300"
-          [class.w-3]="i !== currentIndex"
-          [class.w-8]="i === currentIndex"
-          [class.bg-gray-500]="i !== currentIndex"
-          [class.bg-green-500]="i === currentIndex"
-          [class.shadow-lg]="i === currentIndex"
-          [class.shadow-green-500/50]="i === currentIndex">
+        <div class="carousel-controls">
+            <button class="carousel-btn" id="prevBtn" (click)="prevSlide()">‹</button>
+            <div class="carousel-indicators" id="indicators">
+                <div 
+                    *ngFor="let item of carouselData; let i = index" 
+                    class="indicator" 
+                    [class.active]="i === currentIndex"
+                    (click)="goToSlide(i)"
+                ></div>
+            </div>
+            <button class="carousel-btn" id="nextBtn" (click)="nextSlide()">›</button>
         </div>
-      </div>
-      
-      <!-- Botón Siguiente -->
-      <button 
-        (click)="nextSlide()"
-        class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-transparent border-2 border-green-500 rounded-full text-green-500 text-2xl sm:text-3xl md:text-4xl cursor-pointer transition-all duration-300 flex items-center justify-center hover:bg-purple-600 hover:border-purple-600 hover:text-white hover:shadow-lg hover:shadow-purple-500/50"
-        aria-label="Siguiente">
-        ›
-      </button>
     </div>
-  </div>
 </section>

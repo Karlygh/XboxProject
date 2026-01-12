@@ -1,0 +1,86 @@
+@if (isOpen()) {
+  <div class="modal-backdrop" (click)="onBackdropClick($event)">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closeModal()" aria-label="Cerrar modal">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      @if (selectedGame(); as game) {
+        <div class="modal-body">
+          <div class="game-header">
+            <img [src]="'/assets/images/' + game.image" [alt]="game.title" class="game-image">
+            <div class="game-info">
+              <h2>{{ game.title }}</h2>
+              <div class="game-meta">
+                <span class="category">{{ game.category }}</span>
+                @if (game.year) {
+                  <span class="year">{{ game.year }}</span>
+                }
+                @if (game.developer) {
+                  <span class="developer">{{ game.developer }}</span>
+                }
+              </div>
+              <div class="rating">
+                @for (star of getStars(game.rating); track $index) {
+                  <span class="star" [class.filled]="star">★</span>
+                }
+                <span class="rating-value">{{ game.rating }}/5</span>
+              </div>
+              @if (game.price) {
+                <div class="price">{{ game.price }}€</div>
+              }
+            </div>
+          </div>
+
+          <div class="game-details">
+            <div class="description">
+              <h3>Descripción</h3>
+              <p>{{ game.longDescription || game.description }}</p>
+            </div>
+
+            @if (game.players) {
+              <div class="players">
+                <h4>Jugadores</h4>
+                <p>{{ game.players }}</p>
+              </div>
+            }
+
+            @if (game.platforms && game.platforms.length > 0) {
+              <div class="platforms">
+                <h4>Plataformas</h4>
+                <div class="platform-tags">
+                  @for (platform of game.platforms; track platform) {
+                    <span class="platform-tag">{{ platform }}</span>
+                  }
+                </div>
+              </div>
+            }
+
+            @if (game.trailer) {
+              <div class="trailer">
+                <h3>Trailer</h3>
+                <div class="video-container">
+                  <iframe 
+                    [src]="getYouTubeEmbedUrl(game.trailer)"
+                    frameborder="0"
+                    allowfullscreen>
+                  </iframe>
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- Botón de comprar al final del modal-body -->
+          <div class="modal-actions">
+            <a class="btn-comprar" routerLink="/login" (click)="onBuyClick()">
+              Comprar
+            </a>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}

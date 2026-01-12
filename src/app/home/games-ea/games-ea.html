@@ -1,0 +1,98 @@
+<section class="games-section">
+  <div class="container">
+    <!-- Header Section -->
+    <div class="section-header">
+      <div class="header-content">
+        <h2 class="section-title">Juegos EA Sports & Más</h2>
+        <div class="flex items-center gap-4">
+          <p class="section-subtitle">Descubre la colección completa de títulos destacados</p>
+          <span class="decorative-line text-white" style="margin-left: 1rem;">SERIES S/X</span>
+        </div>
+      </div>
+      
+      <!-- Navigation Buttons -->
+      <div class="navigation-buttons">
+        <button 
+          class="nav-btn"
+          (click)="prevSlide()"
+          [disabled]="isPrevDisabled()"
+          [class.disabled]="isPrevDisabled()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <button 
+          class="nav-btn"
+          (click)="nextSlide()"
+          [disabled]="isNextDisabled()"
+          [class.disabled]="isNextDisabled()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Carousel Container -->
+    <div class="carousel-container">
+      <div class="carousel-track" [style.transform]="getTransformStyle()">
+        <div 
+          *ngFor="let game of games; let i = index" 
+          class="game-card"
+          (click)="openGameModal(game)">
+          
+          <!-- Image Container -->
+          <div class="image-container">
+            <img 
+              [src]="ASSETS_PATH + game.image" 
+              [alt]="game.title"
+              class="game-image">
+            
+            <!-- Overlay -->
+            <div class="image-overlay">
+              <span class="category-badge">{{ game.category }}</span>
+            </div>
+          </div>
+
+          <!-- Card Content -->
+          <div class="card-content">
+            <h3 class="game-title">{{ game.title }}</h3>
+            
+            <!-- Rating -->
+            <div class="rating">
+              <div class="stars">
+                <span 
+                  *ngFor="let filled of getStars(game.rating)" 
+                  class="star"
+                  [class.filled]="filled">
+                  ★
+                </span>
+              </div>
+              <span class="rating-text">{{ game.rating }}</span>
+            </div>
+
+            <p class="game-description">{{ game.description }}</p>
+
+            <!-- Action Button -->
+            <button class="play-btn" (click)="$event.stopPropagation(); openGameModal(game)">
+              <svg class="play-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+              Ver Detalles
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Indicators -->
+    <div class="progress-indicators">
+      <div 
+        *ngFor="let game of games; let i = index" 
+        class="indicator"
+        [class.active]="i === currentSlide()"
+        (click)="goToSlide(i)">
+      </div>
+    </div>
+  </div>
+</section>

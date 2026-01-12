@@ -1,13 +1,12 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HomeCabecera } from './home/home-cabecera/home-cabecera';
 import { Navbar } from '../components/navbar/navbar';
-import { HomePage } from './home/home-page/home-page';
+import { GameModalComponent } from './shared/game-modal/game-modal.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [Navbar,HomePage],
+  imports: [Navbar, GameModalComponent, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

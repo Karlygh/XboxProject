@@ -1,0 +1,108 @@
+<section class="saga-section">
+  <!-- Header -->
+  <div class="saga-header">
+    <div class="saga-logo">
+      <h2 class="saga-title">{{ sagaTitle }}</h2>
+      <div class="title-glow"></div>
+    </div>
+    <p class="saga-subtitle">{{ sagaSubtitle }}</p>
+    <div class="timeline-line"></div>
+  </div>
+
+  <!-- Cards en cascada -->
+  <div class="cascade-container">
+    <div 
+      *ngFor="let game of haloGames; let i = index"
+      class="game-card-cascade"
+      [class.animate]="hasAnimated"
+      [style.animation-delay]="getCardDelay(i)"
+      (click)="openGameModal(game)">
+      
+      <div class="card-number">{{ i + 1 }}</div>
+      
+      <div class="card-content">
+        <!-- Imagen del juego -->
+        <div class="game-image-wrapper">
+          <img 
+            [src]="ASSETS_PATH + game.image" 
+            [alt]="game.title"
+            class="game-image">
+          <div class="image-overlay"></div>
+          <div class="year-badge">{{ game.year }}</div>
+        </div>
+
+        <!-- Info del juego -->
+        <div class="game-info">
+          <div class="info-header">
+            <span class="category-badge">{{ game.category }}</span>
+            <div class="rating-container">
+              <div class="stars">
+                <span 
+                  *ngFor="let star of getStars(game.rating)" 
+                  class="star"
+                  [class.filled]="star">★</span>
+              </div>
+              <span class="rating-value">{{ game.rating }}</span>
+            </div>
+          </div>
+
+          <h3 class="game-title">{{ game.title }}</h3>
+          <p class="game-description">{{ game.description }}</p>
+
+          <div class="game-meta">
+            <div class="meta-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              <span>{{ game.players }}</span>
+            </div>
+
+            <div class="meta-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+              </svg>
+              <span>{{ game.platforms?.[0] || 'Xbox' }}</span>
+            </div>
+
+            @if (game.price !== undefined) {
+              <div class="meta-item price" [class.free]="game.price === 0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <line x1="12" y1="1" x2="12" y2="23"></line>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+                <span>{{ game.price === 0 ? 'Gratis' : game.price + '€' }}</span>
+              </div>
+            }
+          </div>
+
+          <button class="details-btn">
+            <span>Ver Detalles</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Conector a la siguiente card -->
+      <div class="connector" *ngIf="i < haloGames.length - 1"></div>
+    </div>
+  </div>
+
+  <!-- Timeline progress -->
+  <div class="timeline-progress" [class.visible]="isInHaloSection">
+    <div class="progress-step" 
+         *ngFor="let game of haloGames; let i = index"
+         [class.active]="hasAnimated"
+         [class.highlighted]="isYearActive(i)"
+         [style.animation-delay]="getCardDelay(i)">
+      <div class="step-dot"></div>
+      <span class="step-year">{{ game.year }}</span>
+    </div>
+  </div>
+</section>

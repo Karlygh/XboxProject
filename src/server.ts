@@ -36,6 +36,21 @@ app.use(
 );
 
 /**
+ * Configure CSP for development
+ */
+app.use((req, res, next) => {
+  if (process.env['NODE_ENV'] !== 'production') {
+    res.setHeader('Content-Security-Policy', 
+      "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; " +
+      "connect-src 'self' ws: wss: http: https:; " +
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+      "style-src 'self' 'unsafe-inline';"
+    );
+  }
+  next();
+});
+
+/**
  * Handle all other requests by rendering the Angular application.
  */
 app.use((req, res, next) => {

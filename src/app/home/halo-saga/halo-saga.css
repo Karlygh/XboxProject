@@ -1,0 +1,595 @@
+.saga-section {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0a0e1a 0%, #1a1f35 50%, #0f1419 100%);
+  padding: clamp(4rem, 10vh, 8rem) clamp(1rem, 3vw, 2rem);
+  overflow: hidden;
+}
+
+/* Efecto de luz ambiental */
+.saga-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 60%;
+  background: radial-gradient(ellipse at center, rgba(76, 155, 235, 0.15) 0%, transparent 70%);
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.saga-section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 20%;
+  width: 50%;
+  height: 50%;
+  background: radial-gradient(ellipse at center, rgba(139, 195, 74, 0.1) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ===========================
+   HEADER
+   =========================== */
+
+.saga-header {
+  text-align: center;
+  margin-bottom: clamp(4rem, 10vh, 8rem);
+  position: relative;
+  z-index: 10;
+  padding: clamp(3rem, 8vh, 6rem) clamp(2rem, 5vw, 4rem);
+  border-radius: clamp(1rem, 2vw, 2rem);
+  overflow: hidden;
+}
+
+/* Imagen de fondo del header - Banner */
+.saga-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/assets/images/halobanner.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.6;
+  z-index: -2;
+}
+
+/* Overlay oscuro sobre la imagen de fondo */
+.saga-header::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg, 
+    rgba(10, 14, 26, 0.7) 0%, 
+    rgba(10, 14, 26, 0.85) 50%, 
+    rgba(10, 14, 26, 0.95) 100%
+  );
+  z-index: -1;
+}
+
+.saga-logo {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 1.5rem;
+}
+
+.saga-title {
+  font-size: clamp(4rem, 10vw + 1rem, 8rem);
+  font-weight: 900;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  position: relative;
+  z-index: 2;
+  text-shadow: 
+    0 0 20px rgba(76, 155, 235, 0.5),
+    0 0 40px rgba(76, 155, 235, 0.3),
+    0 5px 15px rgba(0, 0, 0, 0.5);
+  animation: titleGlow 3s ease-in-out infinite;
+}
+
+@keyframes titleGlow {
+  0%, 100% { 
+    text-shadow: 
+      0 0 20px rgba(76, 155, 235, 0.5),
+      0 0 40px rgba(76, 155, 235, 0.3),
+      0 5px 15px rgba(0, 0, 0, 0.5);
+  }
+  50% { 
+    text-shadow: 
+      0 0 30px rgba(76, 155, 235, 0.8),
+      0 0 60px rgba(76, 155, 235, 0.5),
+      0 5px 15px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.title-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150%;
+  height: 150%;
+  background: radial-gradient(ellipse at center, rgba(76, 155, 235, 0.3) 0%, transparent 60%);
+  filter: blur(40px);
+  z-index: 1;
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+.saga-subtitle {
+  font-size: clamp(1.1rem, 2vw + 0.5rem, 1.5rem);
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  margin-bottom: 2rem;
+}
+
+.timeline-line {
+  width: 200px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #4c9beb, transparent);
+  margin: 0 auto;
+  box-shadow: 0 0 10px rgba(76, 155, 235, 0.5);
+}
+
+/* ===========================
+   CASCADE CONTAINER
+   =========================== */
+
+.cascade-container {
+  position: relative;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 0;
+  z-index: 10;
+}
+
+.game-card-cascade {
+  position: relative;
+  width: min(600px, 90vw);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(76, 155, 235, 0.2);
+  border-radius: clamp(1rem, 2vw, 1.5rem);
+  backdrop-filter: blur(20px);
+  margin-bottom: clamp(2rem, 4vh, 3rem);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  opacity: 0;
+  transform: translateY(100px) translateX(-50px) rotateX(20deg);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+/* Posicionamiento en cascada alternado */
+.game-card-cascade:nth-child(odd) {
+  margin-left: 0;
+  transform-origin: left center;
+}
+
+.game-card-cascade:nth-child(even) {
+  margin-left: auto;
+  transform-origin: right center;
+  transform: translateY(100px) translateX(50px) rotateX(20deg);
+}
+
+/* Animación de entrada */
+.game-card-cascade.animate {
+  opacity: 1;
+  transform: translateY(0) translateX(0) rotateX(0);
+  animation: cascadeIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes cascadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(100px) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.game-card-cascade:hover {
+  border-color: rgba(76, 155, 235, 0.6);
+  box-shadow: 
+    0 25px 70px rgba(76, 155, 235, 0.3),
+    0 0 40px rgba(76, 155, 235, 0.2);
+  transform: translateY(-10px) scale(1.02);
+}
+
+/* Número de la card */
+.card-number {
+  position: absolute;
+  top: -1rem;
+  left: 2rem;
+  width: 3rem;
+  height: 3rem;
+  background: linear-gradient(135deg, #4c9beb, #2e7bc4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #ffffff;
+  z-index: 5;
+  box-shadow: 0 5px 20px rgba(76, 155, 235, 0.4);
+  border: 3px solid rgba(10, 14, 26, 0.8);
+}
+
+/* ===========================
+   CARD CONTENT
+   =========================== */
+
+.card-content {
+  display: grid;
+  grid-template-columns: 48% 52%;
+  overflow: hidden;
+  border-radius: clamp(1rem, 2vw, 1.5rem);
+}
+
+.game-image-wrapper {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a2332 0%, #0f1419 100%);
+}
+
+.game-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.6s ease;
+}
+
+.game-card-cascade:hover .game-image {
+  transform: scale(1.1);
+}
+
+.image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+  pointer-events: none;
+}
+
+.year-badge {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  background: rgba(76, 155, 235, 0.95);
+  color: #ffffff;
+  padding: 0.4rem 0.9rem;
+  border-radius: 1.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* ===========================
+   GAME INFO
+   =========================== */
+
+.game-info {
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.category-badge {
+  background: rgba(76, 155, 235, 0.15);
+  color: #4c9beb;
+  padding: 0.4rem 0.9rem;
+  border-radius: 1.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(76, 155, 235, 0.3);
+}
+
+.rating-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stars {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.star {
+  color: #333;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.star.filled {
+  color: #4c9beb;
+  text-shadow: 0 0 5px rgba(76, 155, 235, 0.5);
+}
+
+.rating-value {
+  font-weight: 700;
+  color: #4c9beb;
+  font-size: 0.95rem;
+}
+
+.game-title {
+  font-size: clamp(1.5rem, 2.5vw + 0.5rem, 2rem);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.game-description {
+  font-size: clamp(0.9rem, 1.5vw + 0.2rem, 1rem);
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.game-meta {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.meta-item svg {
+  color: #4c9beb;
+  stroke-width: 2;
+}
+
+.meta-item.price {
+  color: #8bc34a;
+  font-weight: 700;
+}
+
+.meta-item.price.free {
+  color: #4c9beb;
+}
+
+.details-btn {
+  background: linear-gradient(135deg, #4c9beb, #2e7bc4);
+  color: #ffffff;
+  border: none;
+  padding: 0.9rem 1.8rem;
+  border-radius: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  transition: all 0.3s ease;
+  margin-top: auto;
+}
+
+.details-btn:hover {
+  transform: translateX(5px);
+  box-shadow: 0 8px 25px rgba(76, 155, 235, 0.4);
+}
+
+.details-btn svg {
+  transition: transform 0.3s ease;
+  stroke-width: 2.5;
+}
+
+.details-btn:hover svg {
+  transform: translateX(5px);
+}
+
+/* ===========================
+   CONNECTOR
+   =========================== */
+
+.connector {
+  position: absolute;
+  bottom: -2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 2rem;
+  background: linear-gradient(180deg, rgba(76, 155, 235, 0.5), transparent);
+  opacity: 0;
+  animation: connectorFade 0.5s ease forwards;
+  animation-delay: 0.4s;
+}
+
+.game-card-cascade.animate .connector {
+  opacity: 1;
+}
+
+@keyframes connectorFade {
+  from { opacity: 0; height: 0; }
+  to { opacity: 1; height: 2rem; }
+}
+
+/* ===========================
+   TIMELINE PROGRESS
+   =========================== */
+
+.timeline-progress {
+  position: fixed;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.timeline-progress.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.progress-step {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  opacity: 0;
+  transform: translateX(50px);
+  transition: all 0.3s ease;
+}
+
+.progress-step.active {
+  animation: stepIn 0.5s ease forwards;
+}
+
+/* 2. Resaltar el año activo */
+.progress-step.highlighted {
+  transform: translateX(-10px) scale(1.2);
+}
+
+.progress-step.highlighted .step-dot {
+  width: 16px;
+  height: 16px;
+  box-shadow: 0 0 20px rgba(76, 155, 235, 0.8);
+  transition: all 0.3s ease;
+}
+
+.progress-step.highlighted .step-year {
+  font-size: 1.4rem;
+  color: #4c9beb;
+  text-shadow: 0 0 10px rgba(76, 155, 235, 0.5);
+  transition: all 0.3s ease;
+}
+
+@keyframes stepIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.step-dot {
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(135deg, #4c9beb, #2e7bc4);
+  border-radius: 50%;
+  border: 2px solid rgba(10, 14, 26, 0.8);
+  box-shadow: 0 0 10px rgba(76, 155, 235, 0.5);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.step-dot::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 2px solid rgba(76, 155, 235, 0.3);
+  border-radius: 50%;
+  animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0; }
+}
+
+.step-year {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  min-width: 3rem;
+  transition: all 0.3s ease;
+}
+
+/* ===========================
+   RESPONSIVE
+   =========================== */
+
+@media (max-width: 991px) {
+  .card-content {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .game-image-wrapper {
+    min-height: 250px;
+  }
+
+  .game-card-cascade:nth-child(odd),
+  .game-card-cascade:nth-child(even) {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .timeline-progress {
+    display: none;
+  }
+}
+
+@media (max-width: 575px) {
+  .saga-section {
+    padding: clamp(3rem, 8vh, 5rem) 1rem;
+  }
+
+  .game-info {
+    padding: 1.5rem;
+  }
+
+  .game-meta {
+    gap: 1rem;
+  }
+
+  .card-number {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.1rem;
+    top: -0.8rem;
+    left: 1.5rem;
+  }
+}
+
+/* Ultra wide */
+@media (min-width: 2560px) {
+  .cascade-container {
+    max-width: 1600px;
+  }
+  
+  .game-card-cascade {
+    width: min(700px, 90vw);
+  }
+}
