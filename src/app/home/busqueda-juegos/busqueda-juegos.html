@@ -1,0 +1,146 @@
+<div class="search-container">
+  <!-- Header -->
+  <header class="search-header">
+    <div class="header-content">
+      <h1 class="search-title">Buscar Juegos</h1>
+      <p class="search-subtitle">Encuentra tu próximo juego favorito</p>
+    </div>
+  </header>
+
+  <!-- Search & Filter Section -->
+  <section class="filter-section">
+    <div class="search-box-wrapper">
+      <!-- Search Input -->
+      <div class="search-input-group">
+        <input
+          type="text"
+          [(ngModel)]="searchTerm"
+          (input)="onSearchInputChange()"
+          (keyup.enter)="onSearch()"
+          placeholder="Busca por título, desarrollador..."
+          class="search-input"
+        />
+        <button (click)="onSearch()" class="search-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          Buscar
+        </button>
+      </div>
+
+      <!-- Categories Filter -->
+      <div class="categories-container">
+        <h3 class="categories-title">Filtrar por Categoría</h3>
+        <div class="categories-grid">
+          <button
+            *ngFor="let category of allCategories()"
+            [class.active]="isCategorySelected(category)"
+            (click)="onCategoryChange(category)"
+            class="category-btn"
+          >
+            {{ category }}
+          </button>
+        </div>
+
+        <!-- Clear Filters Button -->
+        <button
+          *ngIf="searchTerm() || selectedCategories().length > 0"
+          (click)="clearFilters()"
+          class="clear-btn"
+        >
+          Limpiar Filtros
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Results Section -->
+  <section class="results-section">
+    <!-- No Search Message -->
+    <div *ngIf="!hasSearched()" class="no-search-message">
+      <svg xmlns="http://www.w3.org/2000/svg" class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+      <p>Comienza a buscar juegos para ver resultados</p>
+    </div>
+
+    <!-- No Results Message -->
+    <div *ngIf="hasSearched() && searchResults().length === 0" class="no-results-message">
+      <svg xmlns="http://www.w3.org/2000/svg" class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 8v8m-4-4h8"></path>
+      </svg>
+      <p>No se encontraron juegos que coincidan con tu búsqueda</p>
+      <button (click)="clearFilters()" class="retry-btn">Intentar otra búsqueda</button>
+    </div>
+
+    <!-- Results Count -->
+    <div *ngIf="hasSearched() && searchResults().length > 0" class="results-info">
+      <span class="results-count">{{ searchResults().length }} resultado(s) encontrado(s)</span>
+    </div>
+
+    <!-- Games Grid -->
+    <div *ngIf="searchResults().length > 0" class="games-grid">
+      <div
+        *ngFor="let game of searchResults()"
+        class="game-card"
+        (click)="openGameModal(game)"
+      >
+        <!-- Game Image -->
+        <div class="game-image-container">
+          <img
+            [src]="ASSETS_PATH + game.image"
+            [alt]="game.title"
+            class="game-image"
+            (error)="$event.target.src = 'assets/images/placeholder.png'"
+          />
+          <div class="image-overlay">
+            <span class="view-details">Ver Detalles</span>
+          </div>
+        </div>
+
+        <!-- Game Info -->
+        <div class="game-info">
+          <h3 class="game-title">{{ game.title }}</h3>
+          <p class="game-category">{{ game.category }}</p>
+          <p class="game-description">{{ game.description }}</p>
+
+          <!-- Rating -->
+          <div class="rating-section">
+            <div class="stars">
+              <span
+                *ngFor="let filled of getStars(game.rating)"
+                [class.filled]="filled"
+                class="star"
+              >★</span>
+            </div>
+            <span class="rating-number">{{ game.rating.toFixed(1) }}</span>
+          </div>
+
+          <!-- Game Meta -->
+          <div class="game-meta">
+            <div class="meta-item">
+              <span class="meta-label">Año:</span>
+              <span class="meta-value">{{ game.year }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Jugadores:</span>
+              <span class="meta-value">{{ game.players }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Dev:</span>
+              <span class="meta-value">{{ game.developer }}</span>
+            </div>
+          </div>
+
+          <!-- Price -->
+          <div class="game-footer">
+            <span class="game-price">{{ getPriceDisplay(game.price) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
