@@ -109,6 +109,6 @@ export class BusquedaJuegos implements OnInit {
   }
 
   getPriceDisplay(price: number | undefined): string {
-    return (price ?? 0) === 0 ? 'Gratis' : `$${(price ?? 0).toFixed(2)}`;
+    return (price ?? 0) === 0 ? 'Gratis' : `${(price ?? 0).toFixed(2)} €`;
   }
 }

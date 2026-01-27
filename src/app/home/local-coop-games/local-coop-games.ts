@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, inject, ElementRef } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Game } from '../../interfaces/game.interface';
 import { GameModalService } from '../../services/game-modal.service';
@@ -13,16 +13,10 @@ import { GameModalService } from '../../services/game-modal.service';
 export class LocalCoopGamesComponent implements OnInit {
   ASSETS_PATH = '/assets/images/';
   private modalService = inject(GameModalService);
-  private elementRef = inject(ElementRef);
   
   currentCardIndex = 0;
-  scrollProgress = 0;
-  private isScrolling = false;
-  private isOverCards = false;
-  private scrollAccumulator = 0;
-  private readonly SCROLL_THRESHOLD_DOWN = 80;
-  private readonly SCROLL_THRESHOLD_UP = 40;
-  private wasInViewport = false;
+  rotation = 0;
+  private isRotating = false;
 
   coopGames: Game[] = [
     {
@@ -103,140 +97,44 @@ export class LocalCoopGamesComponent implements OnInit {
   ];
 
   ngOnInit() {
-    this.checkMousePosition();
+    // Inicializar posiciones de los elementos del carrusel
+    this.initCarousel();
   }
 
-  @HostListener('document:mousemove', ['$event'])
-  onMouseMove(event: MouseEvent) {
-    this.checkMousePosition(event);
-  }
-
-  @HostListener('window:wheel', ['$event'])
-  onWheel(event: WheelEvent) {
-    if (!this.isOverCards) {
-      this.scrollAccumulator = 0;
-      return;
-    }
+  private initCarousel() {
+    const totalItems = this.coopGames.length;
+    const angleStep = 360 / totalItems;
     
-    const section = this.elementRef.nativeElement.querySelector('.coop-section') as HTMLElement;
-    if (!section) return;
+    // Las posiciones se calculan en getItemTransform()
+  }
 
-    const rect = section.getBoundingClientRect();
-    const isInViewport = rect.top <= 100 && rect.bottom >= window.innerHeight - 100;
+  getItemTransform(index: number): string {
+    const totalItems = this.coopGames.length;
+    const angleStep = 360 / totalItems;
+    const angle = index * angleStep;
+    const radius = 400;
     
-    if (!isInViewport) {
-      this.scrollAccumulator = 0;
-      return;
-    }
-
-    const scrollingDown = event.deltaY > 0;
-    const canChange = scrollingDown 
-      ? this.currentCardIndex < this.coopGames.length - 1
-      : this.currentCardIndex > 0;
-
-    // Si no podemos cambiar en esta dirección, permitir scroll normal
-    if (!canChange) {
-      this.scrollAccumulator = 0;
-      return;
-    }
-
-    // Prevenir scroll de la página mientras estamos sobre las cards
-    event.preventDefault();
-
-    // Si ya estamos cambiando, ignorar
-    if (this.isScrolling) return;
-
-    // Acumular scroll
-    this.scrollAccumulator += Math.abs(event.deltaY);
-
-    // Threshold dinámico: más sensible hacia arriba
-    const threshold = scrollingDown ? this.SCROLL_THRESHOLD_DOWN : this.SCROLL_THRESHOLD_UP;
-
-    // Cambiar card cuando alcanzamos el threshold
-    if (this.scrollAccumulator >= threshold) {
-      this.isScrolling = true;
-      this.scrollAccumulator = 0;
-
-      this.currentCardIndex += scrollingDown ? 1 : -1;
-      this.updateProgress();
-
-      setTimeout(() => {
-        this.isScrolling = false;
-      }, 1200);
-    }
+    return `rotateY(${angle}deg) translateZ(${radius}px)`;
   }
 
-  @HostListener('window:scroll')
-  onScroll() {
-    this.checkMousePosition();
-    this.checkViewportAndReset();
-  }
-
-  private checkViewportAndReset() {
-    const section = this.elementRef.nativeElement.querySelector('.coop-section') as HTMLElement;
-    if (!section) return;
-
-    const rect = section.getBoundingClientRect();
-    const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
-
-    // Si salimos del viewport, resetear al volver
-    if (this.wasInViewport && !isInViewport) {
-      this.currentCardIndex = 0;
-      this.updateProgress();
-    }
-
-    this.wasInViewport = isInViewport;
-  }
-
-  private checkMousePosition(event?: MouseEvent) {
-    const gamesStack = this.elementRef.nativeElement.querySelector('.games-stack') as HTMLElement;
-    if (!gamesStack) {
-      this.isOverCards = false;
-      return;
-    }
-
-    const rect = gamesStack.getBoundingClientRect();
+  rotateCarousel(direction: string) {
+    if (this.isRotating) return;
     
-    if (event) {
-      this.isOverCards = (
-        event.clientX >= rect.left &&
-        event.clientX <= rect.right &&
-        event.clientY >= rect.top &&
-        event.clientY <= rect.bottom
-      );
+    this.isRotating = true;
+    const totalItems = this.coopGames.length;
+    const angleStep = 360 / totalItems;
+    
+    if (direction === 'next') {
+      this.currentCardIndex = (this.currentCardIndex + 1) % totalItems;
+      this.rotation -= angleStep;
     } else {
-      const viewportHeight = window.innerHeight;
-      this.isOverCards = rect.top < viewportHeight * 0.5 && rect.bottom > viewportHeight * 0.5;
+      this.currentCardIndex = (this.currentCardIndex - 1 + totalItems) % totalItems;
+      this.rotation += angleStep;
     }
-  }
-
-  private updateProgress() {
-    this.scrollProgress = (this.currentCardIndex / (this.coopGames.length - 1)) * 100;
-  }
-
-  getCardTransform(index: number): string {
-    const offset = index - this.currentCardIndex;
     
-    if (offset < 0) {
-      return `translate(-50%, -50%) translateY(-150%) scale(0.8) rotateX(20deg)`;
-    } else if (offset === 0) {
-      return `translate(-50%, -50%) translateY(0) scale(1) rotateX(0deg)`;
-    } else if (offset === 1) {
-      return `translate(-50%, -50%) translateY(10%) scale(0.95) rotateX(-5deg)`;
-    } else if (offset === 2) {
-      return `translate(-50%, -50%) translateY(20%) scale(0.9) rotateX(-10deg)`;
-    } else {
-      return `translate(-50%, -50%) translateY(30%) scale(0.85) rotateX(-15deg)`;
-    }
-  }
-
-  isCardVisible(index: number): boolean {
-    const offset = index - this.currentCardIndex;
-    return offset >= 0 && offset <= 2;
-  }
-
-  getStars(rating: number): boolean[] {
-    return Array(5).fill(false).map((_, i) => i < Math.floor(rating));
+    setTimeout(() => {
+      this.isRotating = false;
+    }, 800);
   }
 
   openGameModal(game: Game) {

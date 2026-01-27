@@ -5,92 +5,38 @@
     <p class="main-subtitle">Hasta 4 jugadores · En el mismo sofá · Diversión garantizada</p>
   </div>
 
-  <!-- Stack de juegos con parallax -->
-  <div class="games-stack">
-    <div 
-      *ngFor="let game of coopGames; let i = index"
-      class="game-card-stack"
-      [class.visible]="isCardVisible(i)"
-      [style.transform]="getCardTransform(i)"
-      [style.z-index]="coopGames.length - i"
-      (click)="openGameModal(game)">
-      
-      <div class="card-inner">
-        <!-- Lado izquierdo - Imagen -->
-        <div class="card-image-side">
-          <img 
-            [src]="ASSETS_PATH + game.image" 
-            [alt]="game.title"
-            class="game-cover">
-          <div class="players-badge">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-            </svg>
-            {{ game.players }}
-          </div>
-        </div>
-
-        <!-- Lado derecho - Info -->
-        <div class="card-info-side">
-          <div class="game-header">
-            <span class="category-tag">{{ game.category }}</span>
-            <div class="rating-stars">
-              <span 
-                *ngFor="let star of getStars(game.rating)" 
-                class="star"
-                [class.filled]="star">★</span>
-              <span class="rating-number">{{ game.rating }}</span>
-            </div>
-          </div>
-
-          <h3 class="game-title">{{ game.title }}</h3>
-          <p class="game-description">{{ game.description }}</p>
-
-          <div class="game-features">
-            <div class="feature-item">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-              </svg>
-              <span>{{ game.platforms?.[0] || 'Xbox' }}</span>
-            </div>
-
-            <div class="feature-item">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-              </svg>
-              <span>{{ game.year }}</span>
-            </div>
-
-            @if (game.price && game.price > 0) {
-              <div class="feature-item price">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <line x1="12" y1="1" x2="12" y2="23"></line>
-                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                </svg>
-                <span>{{ game.price }}€</span>
-              </div>
-            }
-          </div>
-
-          <button class="details-button">
-            <span>Ver Detalles</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </button>
+  <!-- Carrusel 3D -->
+  <div class="carousel-wrapper">
+    <div class="carousel-container" [style.transform]="'rotateY(' + rotation + 'deg)'">
+      <div 
+        *ngFor="let game of coopGames; let i = index"
+        class="carousel-item"
+        [style.transform]="getItemTransform(i)"
+        (click)="openGameModal(game)">
+        
+        <img 
+          [src]="ASSETS_PATH + game.image" 
+          [alt]="game.title"
+          class="carousel-image">
+        
+        <div class="carousel-info">
+          <h3>{{ game.title }}</h3>
+          <p>{{ game.players }}</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Progress bar -->
-  <div class="progress-container">
-    <div class="progress-bar" [style.width.%]="scrollProgress"></div>
-    <span class="progress-text">{{ currentCardIndex + 1 }} / {{ coopGames.length }}</span>
+  <!-- Controles de navegación -->
+  <div class="carousel-controls">
+    <button class="control-btn prev-btn" (click)="rotateCarousel('prev')">
+      <span>← Anterior</span>
+    </button>
+    <div class="carousel-counter">
+      <span>{{ currentCardIndex + 1 }} / {{ coopGames.length }}</span>
+    </div>
+    <button class="control-btn next-btn" (click)="rotateCarousel('next')">
+      <span>Siguiente →</span>
+    </button>
   </div>
 </section>
