@@ -29,9 +29,20 @@ export class BusquedaJuegos implements OnInit {
   ngOnInit() {
     this.allCategories.set(this.gamesService.getCategories());
     
-    // Obtener parámetro de búsqueda desde URL
+    // Obtener parámetros de búsqueda desde URL
     this.activatedRoute.queryParams.subscribe(params => {
-      if (params['q']) {
+      // Si viene un ID de juego específico, filtrar por ese juego
+      if (params['game']) {
+        const gameId = parseInt(params['game'], 10);
+        const game = this.gamesService.getGameById(gameId);
+        if (game) {
+          this.searchTerm.set(game.title);
+          this.selectedCategories.set([game.category]);
+          this.performSearch();
+        }
+      } 
+      // Si viene un término de búsqueda general
+      else if (params['q']) {
         this.searchTerm.set(params['q']);
         this.performSearch();
       }
