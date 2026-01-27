@@ -3,15 +3,9 @@ import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Game } from '../../interfaces/game.interface';
 import { GameModalService } from '../../services/game-modal.service';
+import { GamesService } from '../../services/games.service';
 
-interface CarouselItem {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-  tech: string[];
-  gameData?: Game;
-}
+interface CarouselItem extends Game {}
 
 @Component({
   selector: 'app-home-cabecera',
@@ -23,195 +17,23 @@ interface CarouselItem {
 export class HomeCabecera implements OnInit {
   ASSETS_PATH = 'assets/images/';
   private modalService = inject(GameModalService);
+  private gamesService = inject(GamesService);
   
   currentIndex: number = 0;
   parallaxTransform: string = 'translateY(0)';
   
-  carouselData: CarouselItem[] = [
-    { 
-      id: 1, 
-      title: 'Crysis', 
-      description: 'Advanced AI system for predictive analytics.', 
-      image: 'crysis.png', 
-      tech: ['TensorFlow', 'Python'],
-      gameData: {
-        id: 1,
-        title: 'Crysis',
-        description: 'Shooter de ciencia ficción con gráficos revolucionarios.',
-        image: 'crysis.png',
-        category: 'Acción',
-        rating: 4.6,
-        year: 2007,
-        players: '1 jugador',
-        trailer: 'https://www.youtube.com/watch?v=8PdGUZauShA',
-        developer: 'Crytek',
-        platforms: ['PC', 'Xbox 360', 'PlayStation 3'],
-        price: 29.99,
-        longDescription: 'Crysis es un shooter en primera persona que revolucionó los gráficos en videojuegos. Juega como Nomad, un soldado equipado con un nanotraje que te otorga habilidades sobrehumanas en una isla tropical llena de alienígenas.'
-      }
-    },
-    { 
-      id: 2, 
-      title: 'Assassins Creed', 
-      description: 'Next-generation cloud infrastructure.', 
-      image: 'assasins.png', 
-      tech: ['AWS', 'Kubernetes'],
-      gameData: {
-        id: 2,
-        title: 'Assassin\'s Creed',
-        description: 'Aventura histórica de acción y sigilo.',
-        image: 'assasins.png',
-        category: 'Aventura',
-        rating: 4.7,
-        year: 2007,
-        players: '1 jugador',
-        trailer: 'https://www.youtube.com/watch?v=RjQ6ZtyXoA0',
-        developer: 'Ubisoft',
-        platforms: ['PC', 'Xbox 360', 'PlayStation 3'],
-        price: 39.99,
-        longDescription: 'Vive la experiencia de Altaïr Ibn-La\'Ahad, un asesino durante las Cruzadas. Explora ciudades históricas, domina el arte del sigilo y descubre una conspiración que cambiará el curso de la historia.'
-      }
-    },
-    { 
-      id: 3, 
-      title: 'Budokai', 
-      description: 'Secure decentralized storage solution.', 
-      image: 'budokaii.png', 
-      tech: ['Ethereum', 'Solidity'],
-      gameData: {
-        id: 3,
-        title: 'Dragon Ball Z: Budokai',
-        description: 'Juego de lucha basado en el anime Dragon Ball Z.',
-        image: 'budokaii.png',
-        category: 'Lucha',
-        rating: 4.4,
-        year: 2002,
-        players: '1-2 jugadores',
-        trailer: 'https://www.youtube.com/watch?v=C4-C19Tac3Y',
-        developer: 'Dimps',
-        platforms: ['PlayStation 2', 'GameCube'],
-        price: 19.99,
-        longDescription: 'Revive las batallas más épicas de Dragon Ball Z. Juega con tus personajes favoritos como Goku, Vegeta, Gohan y muchos más en combates espectaculares con movimientos especiales fieles al anime.'
-      }
-    },
-    { 
-      id: 4, 
-      title: 'FIFA 08', 
-      description: 'Military-grade cybersecurity framework.', 
-      image: 'fifa08.png', 
-      tech: ['Zero Trust', 'AI Defense'],
-      gameData: {
-        id: 4,
-        title: 'FIFA 08',
-        description: 'Simulador de fútbol con licencias oficiales.',
-        image: 'fifa08.png',
-        category: 'Deportes',
-        rating: 4.3,
-        year: 2007,
-        players: '1-4 jugadores',
-        trailer: 'https://www.youtube.com/watch?v=fcpMI-AFj28&pp=ygUPZmlmYSAwOCB0cmFpbGVy0gcJCU0KAYcqIYzv',
-        developer: 'EA Sports',
-        platforms: ['PC', 'Xbox 360', 'PlayStation 3'],
-        price: 24.99,
-        longDescription: 'FIFA 08 introdujo el sistema Be a Pro, permitiendo controlar un solo jugador durante todo el partido. Disfruta de más de 30 ligas oficiales y 15,000 jugadores con licencias reales.'
-      }
-    },
-    { 
-      id: 5, 
-      title: 'GTA 5', 
-      description: 'Big data processing platform.', 
-      image: 'gta4.png', 
-      tech: ['Apache Spark', 'Kafka'],
-      gameData: {
-        id: 5,
-        title: 'Grand Theft Auto V',
-        description: 'Mundo abierto de crimen y acción.',
-        image: 'gta4.png',
-        category: 'Acción',
-        rating: 4.8,
-        year: 2013,
-        players: '1-30 jugadores',
-        trailer: 'https://www.youtube.com/watch?v=QkkoHAzjnUs&pp=ygUNZ3RhIDUgdHJhaWxlcg%3D%3D',
-        developer: 'Rockstar Games',
-        platforms: ['PC', 'Xbox', 'PlayStation'],
-        price: 29.99,
-        longDescription: 'GTA V ofrece la experiencia de mundo abierto más ambiciosa jamás creada. Juega como tres personajes únicos en Los Santos, una ciudad llena de oportunidades criminales y diversión sin límites.'
-      }
-    },
-    { 
-      id: 6, 
-      title: 'Red Dead', 
-      description: 'Augmented reality system for data visualization.', 
-      image: 'reddead.png', 
-      tech: ['Unity', 'ARCore'],
-      gameData: {
-        id: 6,
-        title: 'Red Dead Redemption',
-        description: 'Western épico en mundo abierto.',
-        image: 'reddead.png',
-        category: 'Aventura',
-        rating: 4.9,
-        year: 2010,
-        players: '1-16 jugadores',
-        trailer: 'https://www.youtube.com/watch?v=-8MN89fIaJ8&pp=ygUbcmVkIGRlYWQgcmVkZW1wdGlvbiB0cmFpbGVy',
-        developer: 'Rockstar Games',
-        platforms: ['Xbox 360', 'PlayStation 3'],
-        price: 39.99,
-        longDescription: 'Vive la historia de John Marston en el ocaso del Viejo Oeste. Un mundo abierto lleno de peligros, honor y redención en una de las mejores narrativas jamás contadas en un videojuego.'
-      }
-    },
-    { 
-      id: 7, 
-      title: 'Resident Evil 5', 
-      description: 'Intelligent IoT ecosystem with edge computing.', 
-      image: 'residentevil.png', 
-      tech: ['MQTT', 'Edge AI'],
-      gameData: {
-        id: 7,
-        title: 'Resident Evil 5',
-        description: 'Terror y supervivencia con cooperativo.',
-        image: 'residentevil.png',
-        category: 'Terror',
-        rating: 4.2,
-        year: 2009,
-        players: '1-2 jugadores',
-        trailer: 'https://www.youtube.com/watch?v=5lYNJQVz_Pc&pp=ygUXcmVzaWRlbnQgZXZpbCA1IHRyYWlsZXI%3D',
-        developer: 'Capcom',
-        platforms: ['PC', 'Xbox 360', 'PlayStation 3'],
-        price: 19.99,
-        longDescription: 'Chris Redfield y Sheva Alomar se enfrentan a una nueva amenaza biológica en África. Juega solo o en cooperativo en esta intensa aventura de supervivencia llena de acción y terror.'
-      }
-    },
-    {
-      id: 8, 
-      title: 'UFC 4', 
-      description: 'Fighting', 
-      image: 'ufc.png', 
-      tech: ['Unreal Engine', 'C++'],
-      gameData: {
-        id: 8,
-        title: 'UFC 4',
-        description: 'Simulador oficial de artes marciales mixtas.',
-        image: 'ufc.png',
-        category: 'Deportes',
-        rating: 4.1,
-        year: 2020,
-        players: '1-2 jugadores',
-        trailer: 'https://www.youtube.com/watch?v=5epQZVC6F3Y&pp=ygUMdWZjIDR0cmFpbGVy',
-        developer: 'EA Sports',
-        platforms: ['Xbox One', 'PlayStation 4'],
-        price: 49.99,
-        longDescription: 'UFC 4 ofrece la experiencia más auténtica de MMA con luchadores reales, movimientos fluidos y un sistema de combate revolucionario. Crea tu luchador y conquista el octágono.'
-      }
-    }
-  ];
+  carouselData: CarouselItem[] = [];
 
   get totalItems(): number {
     return this.carouselData.length;
   }
 
   ngOnInit(): void {
-    // Inicialización si es necesaria
+    // Cargar los juegos del carrusel desde el servicio (IDs 401-408)
+    const carouselGameIds = [401, 402, 403, 404, 405, 406, 407, 408];
+    this.carouselData = carouselGameIds
+      .map(id => this.gamesService.getGameById(id))
+      .filter((game): game is Game => game !== undefined);
   }
 
   // --- Lógica de Scroll y Eventos de Ventana ---
@@ -318,8 +140,6 @@ export class HomeCabecera implements OnInit {
   }
 
   openGameModal(item: CarouselItem) {
-    if (item.gameData) {
-      this.modalService.openModal(item.gameData);
-    }
+    this.modalService.openModal(item);
   }
 }
