@@ -1,4 +1,5 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, OnInit, signal, inject, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, ActivatedRoute } from '@angular/router';
@@ -20,6 +21,7 @@ export class BusquedaJuegos implements OnInit {
   private gamesService = inject(GamesService);
   protected gameCardService = inject(GameCardService);
   private activatedRoute = inject(ActivatedRoute);
+  private destroyRef = inject(DestroyRef);
   
   searchTerm = signal('');
   selectedCategories = signal<string[]>([]);
@@ -31,7 +33,10 @@ export class BusquedaJuegos implements OnInit {
     this.allCategories.set(this.gamesService.getCategories());
     
     // Obtener parámetros de búsqueda desde URL
-    this.activatedRoute.queryParams.subscribe(params => {
+    // Usar takeUntilDestroyed para limpiar la subscripción automáticamente
+    this.activatedRoute.queryParams
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(params => {
       // Si viene un ID de juego específico, filtrar por ese juego
       if (params['game']) {
         const gameId = parseInt(params['game'], 10);
@@ -43,7 +48,7 @@ export class BusquedaJuegos implements OnInit {
         }
       } 
       // Si viene un término de búsqueda general
-      else if (params['q']) {
+        else if (params['q']) {
         this.searchTerm.set(params['q']);
         this.performSearch();
       }
