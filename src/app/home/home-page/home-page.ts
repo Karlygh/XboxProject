@@ -6,6 +6,7 @@ import { GamesEa } from '../games-ea/games-ea';
 import { XboxExclusivesComponent } from '../xbox-exclusives/xbox-exclusives';
 import { LocalCoopGamesComponent } from "../local-coop-games/local-coop-games";
 import { HaloSaga } from "../halo-saga/halo-saga";
+import { Footer } from '../../../components/footer/footer';
 
 @Component({
   selector: 'app-home-page',

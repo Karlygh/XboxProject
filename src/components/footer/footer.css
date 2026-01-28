@@ -1,0 +1,243 @@
+/* ===========================
+   FOOTER CONTAINER
+   =========================== */
+
+.footer {
+  position: relative;
+  background: linear-gradient(180deg, #62911c 0%, #4f7818 100%);
+  color: #ffffff;
+  overflow: hidden;
+}
+
+/* Efecto de luz ambiental de fondo */
+.footer-glow {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(ellipse at 20% 0%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(139, 195, 74, 0.05) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.footer-content {
+  position: relative;
+  z-index: 1;
+  max-width: min(1400px, 90vw);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vh, 5rem) clamp(1rem, 3vw, 2rem);
+}
+
+/* ===========================
+   DIVIDERS
+   =========================== */
+
+.footer-divider-top {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  margin-bottom: clamp(2rem, 4vh, 3rem);
+  box-shadow: 0 0 10px rgba(210, 234, 173, 0.1);
+}
+
+.footer-divider-middle {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  margin: clamp(2rem, 4vh, 3rem) 0;
+  box-shadow: 0 0 8px rgba(210, 234, 173, 0.08);
+}
+
+/* ===========================
+   GRID LAYOUT
+   =========================== */
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(clamp(200px, 100%, 280px), 1fr));
+  gap: clamp(2rem, 4vw, 4rem);
+  margin-bottom: clamp(1.5rem, 3vh, 2rem);
+}
+
+/* ===========================
+   FOOTER SECTIONS
+   =========================== */
+
+.footer-section {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.75rem, 1.5vh, 1rem);
+}
+
+/* Brand Section */
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 1vw, 0.75rem);
+  margin-bottom: clamp(0.5rem, 1vh, 0.75rem);
+}
+
+.footer-logo {
+  height: clamp(2rem, 4vw, 2.5rem);
+  width: auto;
+  opacity: 0.95;
+  transition: opacity 0.3s ease;
+}
+
+.footer-brand:hover .footer-logo {
+  opacity: 1;
+}
+
+.footer-brand-title {
+  font-size: clamp(1rem, 2vw + 0.2rem, 1.25rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.footer-description {
+  font-size: clamp(0.8rem, 1.2vw, 0.95rem);
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  margin: 0;
+  font-weight: 300;
+}
+
+/* ===========================
+   HEADINGS
+   =========================== */
+
+.footer-heading {
+  font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+  font-weight: 600;
+  color: #d2eaad;
+  margin: 0 0 clamp(0.75rem, 1.5vh, 1rem) 0;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.footer-heading::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: clamp(1.5rem, 3vw, 2rem);
+  height: 2px;
+  background: linear-gradient(90deg, #d2eaad, transparent);
+  opacity: 0.6;
+}
+
+/* ===========================
+   NAVIGATION LINKS
+   =========================== */
+
+.footer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.5rem, 1vh, 0.75rem);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-link {
+  font-size: clamp(0.8rem, 1.2vw, 0.95rem);
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  font-weight: 400;
+  padding-left: clamp(0.5rem, 1vw, 0.75rem);
+}
+
+.footer-link::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0;
+  background: #d2eaad;
+  transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 2px;
+}
+
+.footer-link:hover {
+  color: #ffffff;
+  transform: translateX(clamp(0.2rem, 0.5vw, 0.3rem));
+}
+
+.footer-link:hover::before {
+  height: 100%;
+}
+
+/* ===========================
+   BOTTOM SECTION
+   =========================== */
+
+.footer-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 1vh, 0.75rem);
+  padding: clamp(1.5rem, 2vh, 2rem) 0;
+  text-align: center;
+}
+
+.footer-copyright {
+  font-size: clamp(0.75rem, 1vw, 0.9rem);
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.footer-credit {
+  font-size: clamp(0.7rem, 0.9vw, 0.85rem);
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+  font-style: italic;
+  font-weight: 300;
+}
+
+/* ===========================
+   RESPONSIVE ADJUSTMENTS
+   =========================== */
+
+@media (max-width: 768px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-section {
+    padding-bottom: clamp(1rem, 2vh, 1.5rem);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .footer-section:last-child {
+    border-bottom: none;
+  }
+
+  .footer-heading::after {
+    width: 1.5rem;
+  }
+}
+
+/* Para pantallas muy grandes */
+@media (min-width: 1920px) {
+  .footer-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .footer-content {
+    padding: 4rem 3rem;
+  }
+}
