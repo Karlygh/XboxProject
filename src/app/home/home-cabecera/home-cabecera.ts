@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener, inject } from '@angular/core';
-import { CommonModule, NgFor, NgIf } from '@angular/common';
+import { CommonModule, NgFor } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Game } from '../../interfaces/game.interface';
 import { GameModalService } from '../../services/game-modal.service';

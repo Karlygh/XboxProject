@@ -2,7 +2,7 @@ import { Component, HostListener, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { GameModalService } from '../../services/game-modal.service';
-import { RouterLink, RouterModule, Router } from '@angular/router';
+import { RouterLink, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-game-modal',
@@ -14,7 +14,6 @@ import { RouterLink, RouterModule, Router } from '@angular/router';
 export class GameModalComponent {
   private modalService = inject(GameModalService);
   private sanitizer = inject(DomSanitizer);
-  private router = inject(Router);
 
   readonly isOpen = this.modalService.isOpen;
   readonly selectedGame = this.modalService.selectedGame;
