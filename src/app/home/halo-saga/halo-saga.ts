@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { Game } from '../../interfaces/game.interface';
 import { GameModalService } from '../../services/game-modal.service';
 import { GamesService } from '../../services/games.service';
+import { ASSETS_PATHS } from '../../constants/app.constants';
 
 @Component({
   selector: 'app-halo-saga',
@@ -14,7 +15,7 @@ import { GamesService } from '../../services/games.service';
   styleUrl: './halo-saga.css'
 })
 export class HaloSaga implements OnInit {
-  ASSETS_PATH = '/assets/images/';
+  ASSETS_PATH = ASSETS_PATHS.IMAGES;
   private modalService = inject(GameModalService);
   private gamesService = inject(GamesService);
   private elementRef = inject(ElementRef);

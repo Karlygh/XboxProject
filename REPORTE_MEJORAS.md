@@ -6,29 +6,6 @@
 
 ---
 
-## 🔴 PRIORIDAD ALTA (Crítico - Impacta mantenimiento)
-
-### CAMBIO #1: Eliminar duplicación de datos de juegos en componentes
-
-**Ubicación:** `games.service.ts` (633 líneas), `games-ea.ts`, `halo-saga.ts`, `xbox-exclusives.ts`, `local-coop-games.ts`, `busqueda-juegos.ts`
-
-**Problema:** Los mismos juegos están hardcodeados en **5 componentes diferentes + el servicio**. Cada componente tiene su propio array idéntico. Halo Infinite aparece 3 veces con información duplicada.
-
-**Por qué importa:** Si cambias un precio o imagen, necesitas editar 5 archivos. Alto riesgo de inconsistencias y datos desincronizados.
-
-**Solución:**
-
-- Crear `src/app/data/games.data.ts` con todos los datos en UN lugar
-- El servicio solo obtiene de ese archivo
-- Los componentes llaman métodos del servicio como `getEAGames()`, `getHaloGames()`, etc
-- Resultado: Datos en UN único punto de verdad
-
-**Impacto:** `-400 líneas duplicadas`, `+Mantenimiento centralizado`
-
-**Tiempo:** 1 hora
-
----
-
 ### CAMBIO #2: Centralizar constante ASSETS_PATH
 
 **Ubicación:** `games-ea.ts` línea 15, `halo-saga.ts` línea 17, `xbox-exclusives.ts` línea 15, `local-coop-games.ts` línea 16, `busqueda-juegos.ts` línea 18

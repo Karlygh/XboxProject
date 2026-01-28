@@ -5,6 +5,7 @@ import { RouterModule, ActivatedRoute } from '@angular/router';
 import { Game } from '../../interfaces/game.interface';
 import { GamesService } from '../../services/games.service';
 import { GameModalService } from '../../services/game-modal.service';
+import { ASSETS_PATHS } from '../../constants/app.constants';
 
 @Component({
   selector: 'app-busqueda-juegos',
@@ -14,7 +15,7 @@ import { GameModalService } from '../../services/game-modal.service';
   styleUrl: './busqueda-juegos.css',
 })
 export class BusquedaJuegos implements OnInit {
-  ASSETS_PATH = '/assets/images/';
+  ASSETS_PATH = ASSETS_PATHS.IMAGES;
   
   private gamesService = inject(GamesService);
   private modalService = inject(GameModalService);
