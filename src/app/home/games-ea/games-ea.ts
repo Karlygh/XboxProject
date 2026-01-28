@@ -3,8 +3,8 @@ import { Component, signal, OnInit, HostListener, PLATFORM_ID, Inject, inject } 
 import { isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Game } from '../../interfaces/game.interface';
-import { GameModalService } from '../../services/game-modal.service';
 import { GamesService } from '../../services/games.service';
+import { GameCardService } from '../../services/game-card.service';
 import { ASSETS_PATHS } from '../../constants/app.constants';
 
 @Component({
@@ -16,7 +16,7 @@ import { ASSETS_PATHS } from '../../constants/app.constants';
 })
 export class GamesEa implements OnInit {
   ASSETS_PATH = ASSETS_PATHS.IMAGES;
-  private modalService = inject(GameModalService);
+  protected gameCardService = inject(GameCardService);
   private gamesService = inject(GamesService);
 
   currentSlide = signal(0);
@@ -89,6 +89,6 @@ export class GamesEa implements OnInit {
   }
 
   openGameModal(game: Game) {
-    this.modalService.openModal(game);
+    this.gameCardService.openGameModal(game);
   }
 }

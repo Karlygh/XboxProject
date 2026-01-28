@@ -1,8 +1,8 @@
 import { Component, HostListener, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Game } from '../../interfaces/game.interface';
-import { GameModalService } from '../../services/game-modal.service';
 import { GamesService } from '../../services/games.service';
+import { GameCardService } from '../../services/game-card.service';
 import { ASSETS_PATHS } from '../../constants/app.constants';
 
 @Component({
@@ -14,7 +14,7 @@ import { ASSETS_PATHS } from '../../constants/app.constants';
 })
 export class XboxExclusivesComponent implements OnInit {
   ASSETS_PATH = ASSETS_PATHS.IMAGES;
-  private modalService = inject(GameModalService);
+  protected gameCardService = inject(GameCardService);
   private gamesService = inject(GamesService);
 
   currentSection = 0;
@@ -77,6 +77,6 @@ export class XboxExclusivesComponent implements OnInit {
   }
 
   openGameModal(game: Game) {
-    this.modalService.openModal(game);
+    this.gameCardService.openGameModal(game);
   }
 }

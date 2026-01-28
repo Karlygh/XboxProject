@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { Game } from '../../interfaces/game.interface';
 import { GamesService } from '../../services/games.service';
-import { GameModalService } from '../../services/game-modal.service';
+import { GameCardService } from '../../services/game-card.service';
 import { ASSETS_PATHS } from '../../constants/app.constants';
 
 @Component({
@@ -18,7 +18,7 @@ export class BusquedaJuegos implements OnInit {
   ASSETS_PATH = ASSETS_PATHS.IMAGES;
   
   private gamesService = inject(GamesService);
-  private modalService = inject(GameModalService);
+  protected gameCardService = inject(GameCardService);
   private activatedRoute = inject(ActivatedRoute);
   
   searchTerm = signal('');
@@ -101,12 +101,12 @@ export class BusquedaJuegos implements OnInit {
     this.hasSearched.set(false);
   }
 
-  openGameModal(game: Game) {
-    this.modalService.openModal(game);
-  }
-
   getStars(rating: number): boolean[] {
     return Array(5).fill(false).map((_, i) => i < Math.floor(rating));
+  }
+
+  openGameModal(game: Game) {
+    this.gameCardService.openGameModal(game);
   }
 
   getPriceDisplay(price: number | undefined): string {

@@ -6,24 +6,6 @@
 
 ---
 
-### CAMBIO #2: Centralizar constante ASSETS_PATH
-
-**Ubicación:** `games-ea.ts` línea 15, `halo-saga.ts` línea 17, `xbox-exclusives.ts` línea 15, `local-coop-games.ts` línea 16, `busqueda-juegos.ts` línea 18
-
-**Problema:** La misma línea `ASSETS_PATH = '/assets/images/';` está repetida en 5 componentes exactamente igual.
-
-**Por qué importa:** Si la ruta cambia (`/assets/images/` → `/assets/img/`), debes buscar y reemplazar en 5 archivos. Riesgo de olvidar alguno.
-
-**Solución:**
-
-- Crear `src/app/constants/app.constants.ts`
-- Exportar `export const ASSETS_PATHS = { IMAGES: '/assets/images/', ... }`
-- Importar en cada componente: `import { ASSETS_PATHS } from '../../constants/app.constants'`
-- Resultado: Una constante, actualización en un lugar
-
-**Impacto:** `Cambios centralizados`, `Escalable para agregar más constantes`
-
-**Tiempo:** 15 minutos
 
 ---
 
