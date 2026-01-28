@@ -1,4 +1,4 @@
-import { Component, HostListener, inject } from '@angular/core';
+import { Component, HostListener, inject, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { GameModalService } from '../../services/game-modal.service';
@@ -14,6 +14,11 @@ import { RouterLink, RouterModule } from '@angular/router';
 export class GameModalComponent {
   private modalService = inject(GameModalService);
   private sanitizer = inject(DomSanitizer);
+  private renderer = inject(Renderer2);
+
+  constructor() {
+    this.modalService.setRenderer(this.renderer);
+  }
 
   readonly isOpen = this.modalService.isOpen;
   readonly selectedGame = this.modalService.selectedGame;
