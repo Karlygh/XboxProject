@@ -1,7 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Game } from '../interfaces/game.interface';
 import { ALL_GAMES, EA_GAMES, HALO_GAMES, XBOX_EXCLUSIVES, COOP_GAMES } from '../data/games.data';
+import { GamesSearchService } from './games-search.service';
+import { GamesFilterService } from './games-filter.service';
 
+/**
+ * Servicio de coordinación para juegos
+ * Responsabilidad única: orquestar operaciones usando servicios especializados
+ * 
+ * Servicios especializados:
+ * - GamesSearchService: búsqueda por término
+ * - GamesFilterService: filtrado por criterios
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -13,7 +23,10 @@ export class GamesService {
    */
   private allGames: Game[] = ALL_GAMES;
 
-  constructor() {}
+  constructor(
+    private searchService: GamesSearchService,
+    private filterService: GamesFilterService
+  ) {}
 
   /**
    * Obtiene juegos EA Sports
@@ -51,76 +64,54 @@ export class GamesService {
   }
 
   /**
-   * Busca juegos por término (título o descripción)
+   * Busca juegos por término (delega a GamesSearchService)
    */
   searchGames(searchTerm: string): Game[] {
-    if (!searchTerm.trim()) {
-      return [];
-    }
-
-    const term = searchTerm.toLowerCase();
-    return this.allGames.filter(game =>
-      game.title.toLowerCase().includes(term) ||
-      game.description.toLowerCase().includes(term) ||
-      game.developer?.toLowerCase().includes(term) ||
-      game.longDescription?.toLowerCase().includes(term)
-    );
+    return this.searchService.searchGames(this.allGames, searchTerm);
   }
 
   /**
-   * Obtiene juegos por categoría
+   * Obtiene juegos por categoría (delega a GamesFilterService)
    */
   getGamesByCategory(category: string): Game[] {
-    return this.allGames.filter(game => game.category === category);
+    return this.filterService.getGamesByCategory(this.allGames, category);
   }
 
   /**
-   * Obtiene todas las categorías únicas
+   * Obtiene todas las categorías únicas (delega a GamesFilterService)
    */
   getCategories(): string[] {
-    const categories = new Set(this.allGames.map(game => game.category));
-    return Array.from(categories).sort();
+    return this.filterService.getCategories(this.allGames);
   }
 
   /**
-   * Filtra juegos por múltiples categorías
+   * Filtra juegos por múltiples categorías (delega a GamesFilterService)
    */
   getGamesByCategories(categories: string[]): Game[] {
-    if (categories.length === 0) {
-      return [];
-    }
-    return this.allGames.filter(game => categories.includes(game.category));
+    return this.filterService.getGamesByCategories(this.allGames, categories);
   }
 
   /**
-   * Busca y filtra juegos simultáneamente con opciones avanzadas
+   * Busca y filtra juegos simultáneamente (coordina ambos servicios)
    */
   searchAndFilter(searchTerm: string, categories: string[]): Game[] {
     let results = this.allGames;
 
-    // Aplicar filtro de búsqueda si existe término
+    // Aplicar búsqueda si existe término
     if (searchTerm.trim()) {
-      const term = searchTerm.toLowerCase();
-      results = results.filter(game =>
-        game.title.toLowerCase().includes(term) ||
-        game.description.toLowerCase().includes(term) ||
-        game.category.toLowerCase().includes(term) ||
-        game.developer?.toLowerCase().includes(term) ||
-        game.longDescription?.toLowerCase().includes(term) ||
-        game.platforms?.some(p => p.toLowerCase().includes(term))
-      );
+      results = this.searchService.advancedSearch(results, searchTerm);
     }
 
     // Aplicar filtro de categorías
     if (categories.length > 0) {
-      results = results.filter(game => categories.includes(game.category));
+      results = this.filterService.getGamesByCategories(results, categories);
     }
 
     return results;
   }
 
   /**
-   * Filtro avanzado por múltiples criterios
+   * Filtro avanzado por múltiples criterios (delega a GamesFilterService)
    */
   advancedFilter(options: {
     searchTerm?: string;
@@ -131,54 +122,34 @@ export class GamesService {
   }): Game[] {
     let results = this.allGames;
 
-    // Filtrar por término de búsqueda
+    // Aplicar búsqueda si existe término
     if (options.searchTerm?.trim()) {
-      const term = options.searchTerm.toLowerCase();
-      results = results.filter(game =>
-        game.title.toLowerCase().includes(term) ||
-        game.description.toLowerCase().includes(term) ||
-        game.category.toLowerCase().includes(term) ||
-        game.developer?.toLowerCase().includes(term)
-      );
+      results = this.searchService.advancedSearch(results, options.searchTerm);
     }
 
-    // Filtrar por categorías
-    if (options.categories && options.categories.length > 0) {
-      results = results.filter(game => options.categories!.includes(game.category));
-    }
-
-    // Filtrar por rating
-    if (options.minRating !== undefined) {
-      results = results.filter(game => game.rating >= options.minRating!);
-    }
-
-    // Filtrar por precio máximo
-    if (options.maxPrice !== undefined) {
-      results = results.filter(game => (game.price ?? 0) <= options.maxPrice!);
-    }
-
-    // Filtrar por año
-    if (options.year !== undefined) {
-      results = results.filter(game => game.year === options.year);
-    }
+    // Aplicar filtros adicionales
+    results = this.filterService.advancedFilter(results, {
+      categories: options.categories,
+      minRating: options.minRating,
+      maxPrice: options.maxPrice,
+      year: options.year
+    });
 
     return results;
   }
 
   /**
-   * Obtiene juegos ordenados por rating
+   * Obtiene juegos ordenados por rating (delega a GamesFilterService)
    */
   getTopRatedGames(limit: number = 5): Game[] {
-    return [...this.allGames]
-      .sort((a, b) => b.rating - a.rating)
-      .slice(0, limit);
+    return this.filterService.getTopRatedGames(this.allGames, limit);
   }
 
   /**
-   * Obtiene juegos gratis
+   * Obtiene juegos gratis (delega a GamesFilterService)
    */
   getFreeGames(): Game[] {
-    return this.allGames.filter(game => game.price === 0);
+    return this.filterService.getFreeGames(this.allGames);
   }
 
   /**

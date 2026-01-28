@@ -44,6 +44,7 @@ export class GameModalComponent {
   }
 
   private extractYouTubeId(url: string): string {
+    if (!url || typeof url !== 'string') return '';
     const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
     return match ? match[1] : '';
   }

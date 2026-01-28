@@ -1,10 +1,11 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, Renderer2, inject } from '@angular/core';
 import { Game } from '../interfaces/game.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameModalService {
+  private renderer = inject(Renderer2);
   private _isOpen = signal(false);
   private _selectedGame = signal<Game | null>(null);
 
@@ -14,12 +15,12 @@ export class GameModalService {
   openModal(game: Game) {
     this._selectedGame.set(game);
     this._isOpen.set(true);
-    document.body.style.overflow = 'hidden';
+    this.renderer.setStyle(document.body, 'overflow', 'hidden');
   }
 
   closeModal() {
     this._isOpen.set(false);
     this._selectedGame.set(null);
-    document.body.style.overflow = 'auto';
+    this.renderer.setStyle(document.body, 'overflow', 'auto');
   }
 }
