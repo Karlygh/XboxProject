@@ -1,0 +1,198 @@
+<div class="contacto-bg">
+  <section class="contacto-container">
+    <!-- Hero Section -->
+    <div class="contacto-hero">
+      <h1>Contacto</h1>
+      <p class="contacto-subtitle">¿Tienes alguna pregunta o sugerencia? Nos encantaría escucharte</p>
+    </div>
+
+    <div class="contacto-grid">
+      <!-- Formulario de Contacto -->
+      <article class="contacto-card form-card">
+        <div class="card-icon">✉️</div>
+        <h2>Envíanos un Mensaje</h2>
+        <p class="card-description">Completa el formulario y te responderemos lo antes posible</p>
+
+        <!-- Mensajes de estado -->
+        @if (submitSuccess()) {
+          <div class="alert alert-success">
+            <span class="alert-icon">✅</span>
+            <div class="alert-content">
+              <strong>¡Mensaje enviado con éxito!</strong>
+              <p>Gracias por contactarnos. Te responderemos pronto.</p>
+            </div>
+          </div>
+        }
+
+        @if (submitError()) {
+          <div class="alert alert-error">
+            <span class="alert-icon">❌</span>
+            <div class="alert-content">
+              <strong>Error al enviar el mensaje</strong>
+              <p>Por favor, inténtalo de nuevo más tarde.</p>
+            </div>
+          </div>
+        }
+
+        <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contacto-form">
+          <!-- Nombre -->
+          <div class="form-group" [class.has-error]="hasError('nombre')">
+            <label for="nombre">Nombre Completo *</label>
+            <input 
+              type="text" 
+              id="nombre" 
+              formControlName="nombre"
+              placeholder="Ej: Juan Pérez" 
+              autocomplete="name"
+              [class.invalid]="hasError('nombre')">
+            @if (hasError('nombre')) {
+              <span class="error-message">{{ getErrorMessage('nombre') }}</span>
+            }
+          </div>
+
+          <!-- Email -->
+          <div class="form-group" [class.has-error]="hasError('email')">
+            <label for="email">Correo Electrónico *</label>
+            <input 
+              type="email" 
+              id="email" 
+              formControlName="email"
+              placeholder="tucorreo@ejemplo.com" 
+              autocomplete="email"
+              [class.invalid]="hasError('email')">
+            @if (hasError('email')) {
+              <span class="error-message">{{ getErrorMessage('email') }}</span>
+            }
+          </div>
+
+          <!-- Asunto -->
+          <div class="form-group" [class.has-error]="hasError('asunto')">
+            <label for="asunto">Asunto *</label>
+            <select 
+              id="asunto" 
+              formControlName="asunto"
+              [class.invalid]="hasError('asunto')">
+              <option value="">Selecciona un tema</option>
+              <option value="consulta">Consulta General</option>
+              <option value="sugerencia">Sugerencia</option>
+              <option value="error">Reportar Error</option>
+              <option value="colaboracion">Colaboración</option>
+              <option value="otro">Otro</option>
+            </select>
+            @if (hasError('asunto')) {
+              <span class="error-message">{{ getErrorMessage('asunto') }}</span>
+            }
+          </div>
+
+          <!-- Mensaje -->
+          <div class="form-group" [class.has-error]="hasError('mensaje')">
+            <label for="mensaje">Mensaje *</label>
+            <textarea 
+              id="mensaje" 
+              formControlName="mensaje"
+              rows="6" 
+              placeholder="Escribe tu mensaje aquí..."
+              [class.invalid]="hasError('mensaje')"></textarea>
+            <div class="textarea-footer">
+              @if (hasError('mensaje')) {
+                <span class="error-message">{{ getErrorMessage('mensaje') }}</span>
+              }
+              <span class="char-count" [class.limit-reached]="charCount() >= maxChars">
+                {{ charCount() }} / {{ maxChars }} caracteres
+              </span>
+            </div>
+          </div>
+
+          <!-- Botón Submit -->
+          <button 
+            type="submit" 
+            class="btn-submit"
+            [disabled]="isSubmitting()"
+            [class.loading]="isSubmitting()">
+            @if (isSubmitting()) {
+              <span class="spinner"></span>
+              <span>Enviando...</span>
+            } @else {
+              <span class="btn-icon">📤</span>
+              <span>Enviar Mensaje</span>
+            }
+          </button>
+
+          <p class="form-note">* Campos obligatorios</p>
+        </form>
+      </article>
+
+      <!-- Información de Contacto -->
+      <aside class="contacto-sidebar">
+        <!-- Información Rápida -->
+        <article class="info-card">
+          <div class="card-icon">💬</div>
+          <h3>Información de Contacto</h3>
+          <div class="info-item">
+            <span class="info-icon">📧</span>
+            <div class="info-content">
+              <strong>Email</strong>
+              <a href="mailto:info@gameclassicspass.com">info&#64;gameclassicspass.com</a>
+            </div>
+          </div>
+          <div class="info-item">
+            <span class="info-icon">⏰</span>
+            <div class="info-content">
+              <strong>Horario de Respuesta</strong>
+              <p>Lunes a Viernes: 9:00 - 18:00 (CET)</p>
+            </div>
+          </div>
+          <div class="info-item">
+            <span class="info-icon">⚡</span>
+            <div class="info-content">
+              <strong>Tiempo de Respuesta</strong>
+              <p>Normalmente en 24-48 horas</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Redes Sociales -->
+        <article class="info-card">
+          <div class="card-icon">🌐</div>
+          <h3>Síguenos en Redes</h3>
+          <div class="social-links">
+            <a href="#" class="social-btn twitter">
+              <span class="social-icon">🐦</span>
+              <span>Twitter</span>
+            </a>
+            <a href="#" class="social-btn discord">
+              <span class="social-icon">💬</span>
+              <span>Discord</span>
+            </a>
+            <a href="#" class="social-btn youtube">
+              <span class="social-icon">▶️</span>
+              <span>YouTube</span>
+            </a>
+            <a href="#" class="social-btn reddit">
+              <span class="social-icon">📱</span>
+              <span>Reddit</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- FAQ Rápido -->
+        <article class="info-card">
+          <div class="card-icon">❓</div>
+          <h3>Preguntas Frecuentes</h3>
+          <div class="faq-item">
+            <strong>¿Cómo puedo colaborar?</strong>
+            <p>Envíanos un mensaje seleccionando "Colaboración" en el asunto.</p>
+          </div>
+          <div class="faq-item">
+            <strong>¿Reportar un error?</strong>
+            <p>Selecciona "Reportar Error" y descríbenos el problema con detalle.</p>
+          </div>
+          <div class="faq-item">
+            <strong>¿Sugerencias de juegos?</strong>
+            <p>¡Nos encanta! Usa "Sugerencia" en el formulario.</p>
+          </div>
+        </article>
+      </aside>
+    </div>
+  </section>
+</div>

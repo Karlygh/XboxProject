@@ -1,0 +1,119 @@
+<div class="noticias-bg">
+  <section class="noticias-container">
+    <!-- Hero Section -->
+    <div class="noticias-hero">
+      <h1>Noticias de Gaming</h1>
+      <p class="hero-subtitle">Las últimas novedades del mundo de los videojuegos</p>
+    </div>
+
+    <!-- Barra de categorías y búsqueda -->
+    <div class="controls-section">
+      <!-- Categorías -->
+      <div class="categories">
+        @for (category of categories; track category.id) {
+          <button 
+            class="category-btn"
+            [class.active]="selectedCategory() === category.id"
+            (click)="selectCategory(category.id)">
+            <span class="category-icon">{{ category.icon }}</span>
+            <span>{{ category.label }}</span>
+          </button>
+        }
+      </div>
+
+      <!-- Buscador -->
+      <div class="search-bar">
+        <div class="search-input-wrapper">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            [(ngModel)]="searchQuery"
+            (keyup.enter)="onSearch()"
+            placeholder="Buscar noticias..."
+            class="search-input">
+          @if (searchQuery()) {
+            <button class="clear-btn" (click)="clearSearch()">✕</button>
+          }
+        </div>
+        <button class="search-btn" (click)="onSearch()">
+          Buscar
+        </button>
+      </div>
+    </div>
+
+    <!-- Estado de carga -->
+    @if (isLoading()) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Cargando noticias...</p>
+      </div>
+    }
+
+    <!-- Estado de error -->
+    @else if (error()) {
+      <div class="error-state">
+        <span class="error-icon">⚠️</span>
+        <h3>Error al cargar las noticias</h3>
+        <p>{{ error() }}</p>
+        <button class="retry-btn" (click)="retry()">
+          <span>🔄</span>
+          <span>Reintentar</span>
+        </button>
+      </div>
+    }
+
+    <!-- Grid de noticias -->
+    @else if (filteredArticles().length > 0) {
+      <div class="news-grid">
+        @for (article of filteredArticles(); track article.url) {
+          <article class="news-card" (click)="openArticle(article.url)">
+            <!-- Imagen -->
+            <div class="news-image">
+              @if (article.urlToImage) {
+                <img [src]="article.urlToImage" [alt]="article.title" loading="lazy">
+              } @else {
+                <div class="no-image">
+                  <span>📰</span>
+                </div>
+              }
+              <div class="news-source">{{ article.source.name }}</div>
+            </div>
+
+            <!-- Contenido -->
+            <div class="news-content">
+              <h3 class="news-title">{{ article.title }}</h3>
+              <p class="news-description">{{ article.description }}</p>
+              
+              <div class="news-footer">
+                <span class="news-date">{{ getRelativeTime(article.publishedAt) }}</span>
+                @if (article.author) {
+                  <span class="news-author">{{ article.author }}</span>
+                }
+              </div>
+            </div>
+
+            <!-- Overlay de hover -->
+            <div class="news-overlay">
+              <span class="read-more">Leer más →</span>
+            </div>
+          </article>
+        }
+      </div>
+    }
+
+    <!-- Sin resultados -->
+    @else {
+      <div class="empty-state">
+        <span class="empty-icon">📭</span>
+        <h3>No se encontraron noticias</h3>
+        <p>Intenta con otra búsqueda o categoría</p>
+      </div>
+    }
+
+    <!-- Footer info -->
+    <div class="news-footer-info">
+      <p>Noticias proporcionadas por NewsAPI</p>
+      <p class="disclaimer">Las noticias son de fuentes externas y se actualizan constantemente</p>
+    </div>
+  </section>
+</div>

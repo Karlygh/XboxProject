@@ -1,0 +1,107 @@
+.legal-container {
+  max-width: min(1200px, 90vw);
+  margin: 0 auto;
+  padding: clamp(2rem, 5vh, 4rem) clamp(1rem, 3vw, 2rem);
+}
+
+.legal-hero {
+  text-align: center;
+  margin-bottom: clamp(3rem, 6vh, 5rem);
+  padding: clamp(2rem, 4vh, 3rem);
+  background: linear-gradient(135deg, rgba(98, 145, 28, 0.1) 0%, rgba(79, 120, 24, 0.1) 100%);
+  border-radius: 1rem;
+}
+
+.legal-hero h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: #62911c;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.legal-subtitle {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: rgba(0, 0, 0, 0.7);
+  font-weight: 300;
+}
+
+.legal-card {
+  background: #ffffff;
+  border-radius: 1rem;
+  padding: clamp(2rem, 4vw, 3rem);
+  margin-bottom: clamp(2rem, 4vh, 3rem);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #62911c;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.legal-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+.legal-icon {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: 1rem;
+}
+
+.legal-card h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  color: #4f7818;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.legal-text h3 {
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
+  color: #62911c;
+  margin: 1.5rem 0 1rem 0;
+  font-weight: 600;
+}
+
+.legal-text p {
+  font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+  line-height: 1.7;
+  color: rgba(0, 0, 0, 0.8);
+  margin-bottom: 1rem;
+}
+
+.legal-text ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.legal-text li {
+  padding-left: 1.5rem;
+  margin-bottom: 0.75rem;
+  position: relative;
+  line-height: 1.6;
+}
+
+.legal-text li::before {
+  content: '▸';
+  color: #62911c;
+  position: absolute;
+  left: 0;
+  font-weight: bold;
+}
+
+.legal-footer {
+  text-align: center;
+  padding: clamp(2rem, 4vh, 3rem);
+  background: rgba(98, 145, 28, 0.05);
+  border-radius: 1rem;
+  margin-top: clamp(3rem, 6vh, 5rem);
+}
+
+.legal-footer p {
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
+  color: rgba(0, 0, 0, 0.7);
+  margin: 0.5rem 0;
+}
+
+@media (max-width: 768px) {
+  .legal-card {
+    padding: 1.5rem;
+  }
+}
