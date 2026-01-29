@@ -1,0 +1,393 @@
+<div class="trivia-bg">
+  <section class="trivia-container">
+    
+    <!-- MENÚ PRINCIPAL -->
+    @if (gameMode() === 'menu') {
+      <div class="menu-screen">
+        <!-- Hero -->
+        <div class="trivia-hero">
+          <div class="hero-icon">🧠</div>
+          <h1>Gaming Trivia</h1>
+          <p class="hero-subtitle">Pon a prueba tus conocimientos sobre videojuegos</p>
+        </div>
+
+        <!-- Estadísticas rápidas -->
+        @if (stats()) {
+          <div class="quick-stats">
+            <div class="stat-card">
+              <span class="stat-icon">🎮</span>
+              <span class="stat-number">{{ stats()!.totalGames }}</span>
+              <span class="stat-label">Partidas</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-icon">✅</span>
+              <span class="stat-number">{{ stats()!.totalCorrect }}</span>
+              <span class="stat-label">Aciertos</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-icon">🔥</span>
+              <span class="stat-number">{{ stats()!.bestStreak }}</span>
+              <span class="stat-label">Mejor Racha</span>
+            </div>
+          </div>
+        }
+
+        <!-- Configuración del juego -->
+        <div class="game-config">
+          <h2>Configurar Partida</h2>
+          
+          <div class="config-group">
+            <label>Tipo de Preguntas</label>
+            <div class="button-group">
+              <button 
+                class="config-btn"
+                [class.active]="questionType() === 'general'"
+                (click)="questionType.set('general')">
+                📚 General
+              </button>
+              <button 
+                class="config-btn"
+                [class.active]="questionType() === 'images'"
+                (click)="questionType.set('images')">
+                🖼️ Imágenes
+              </button>
+              <button 
+                class="config-btn"
+                [class.active]="questionType() === 'years'"
+                (click)="questionType.set('years')">
+                📅 Años
+              </button>
+              <button 
+                class="config-btn"
+                [class.active]="questionType() === 'mixed'"
+                (click)="questionType.set('mixed')">
+                🎲 Mixto
+              </button>
+            </div>
+          </div>
+
+          <div class="config-group">
+            <label>Número de Preguntas</label>
+            <div class="button-group">
+              <button 
+                class="config-btn"
+                [class.active]="questionAmount() === 5"
+                (click)="questionAmount.set(5)">
+                5
+              </button>
+              <button 
+                class="config-btn"
+                [class.active]="questionAmount() === 10"
+                (click)="questionAmount.set(10)">
+                10
+              </button>
+              <button 
+                class="config-btn"
+                [class.active]="questionAmount() === 15"
+                (click)="questionAmount.set(15)">
+                15
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="menu-actions">
+          <button class="btn-primary btn-large" (click)="startGame()">
+            <span class="btn-icon">🎮</span>
+            <span>¡Jugar!</span>
+          </button>
+          
+          <div class="secondary-actions">
+            <button class="btn-secondary" (click)="showLeaderboard()">
+              <span>🏆</span>
+              <span>Ranking</span>
+            </button>
+            <button class="btn-secondary" (click)="showAchievements()">
+              <span>🎖️</span>
+              <span>Logros</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- PANTALLA DE CARGA -->
+    @if (isLoading()) {
+      <div class="loading-screen">
+        <div class="spinner-large"></div>
+        <p>Cargando preguntas...</p>
+      </div>
+    }
+
+    <!-- PANTALLA DE JUEGO -->
+    @if (gameMode() === 'playing' && currentQuestion()) {
+      <div class="game-screen">
+        <!-- Header del juego -->
+        <div class="game-header">
+          <button class="btn-back" (click)="backToMenu()">← Salir</button>
+          
+          <div class="game-info">
+            <div class="info-item">
+              <span class="info-label">Puntos</span>
+              <span class="info-value score-value">{{ currentScore() }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Racha</span>
+              <span class="info-value streak-value">{{ currentStreak() }}🔥</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barra de progreso -->
+        <div class="progress-bar-container">
+          <div class="progress-bar" [style.width.%]="progress()"></div>
+          <span class="progress-text">
+            Pregunta {{ currentQuestionIndex() + 1 }} de {{ questions().length }}
+          </span>
+        </div>
+
+        <!-- Temporizador -->
+        <div class="timer-container">
+          <div class="timer" [class.warning]="timeLeft() <= 5">
+            <span class="timer-icon">⏱️</span>
+            <span class="timer-value">{{ timeLeft() }}s</span>
+          </div>
+        </div>
+
+        <!-- Pregunta -->
+        <div class="question-card">
+          <!-- Categoría y dificultad -->
+          <div class="question-meta">
+            <span class="category">{{ currentQuestion()!.category }}</span>
+            <span class="difficulty" [ngClass]="getDifficultyClass(currentQuestion()!.difficulty)">
+              {{ getDifficultyEmoji(currentQuestion()!.difficulty) }}
+            </span>
+          </div>
+
+          <!-- Imagen (si existe) -->
+          @if (currentQuestion()!.imageUrl) {
+            <div class="question-image">
+              <img [src]="currentQuestion()!.imageUrl" [alt]="currentQuestion()!.question" loading="lazy">
+            </div>
+          }
+
+          <!-- Texto de la pregunta -->
+          <h2 class="question-text">{{ currentQuestion()!.question }}</h2>
+
+          <!-- Respuestas -->
+          <div class="answers-grid">
+            @for (answer of currentQuestion()!.allAnswers; track answer) {
+              <button 
+                class="answer-btn"
+                [class.selected]="selectedAnswer() === answer"
+                [class.correct]="isAnswerChecked() && answer === currentQuestion()!.correctAnswer"
+                [class.incorrect]="isAnswerChecked() && selectedAnswer() === answer && !isCorrect()"
+                [disabled]="isAnswerChecked()"
+                (click)="selectAnswer(answer)">
+                {{ answer }}
+              </button>
+            }
+          </div>
+
+          <!-- Feedback -->
+          @if (isAnswerChecked()) {
+            <div class="feedback" [class.correct]="isCorrect()" [class.incorrect]="!isCorrect()">
+              @if (isCorrect()) {
+                <div class="feedback-content">
+                  <span class="feedback-icon">✅</span>
+                  <span class="feedback-text">¡Correcto!</span>
+                  <span class="points-earned">+{{ 10 + (currentStreak() - 1) * 2 + Math.floor(timeLeft() / 3) }} pts</span>
+                </div>
+              } @else {
+                <div class="feedback-content">
+                  <span class="feedback-icon">❌</span>
+                  <span class="feedback-text">Incorrecto</span>
+                  <span class="correct-answer">Respuesta: {{ currentQuestion()!.correctAnswer }}</span>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Botones de acción -->
+          <div class="question-actions">
+            @if (!isAnswerChecked()) {
+              <button 
+                class="btn-primary"
+                [disabled]="!selectedAnswer()"
+                (click)="checkAnswer()">
+                Confirmar Respuesta
+              </button>
+            } @else {
+              <button class="btn-primary" (click)="nextQuestion()">
+                @if (currentQuestionIndex() + 1 < questions().length) {
+                  Siguiente Pregunta →
+                } @else {
+                  Ver Resultados 🏆
+                }
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- PANTALLA DE RESULTADOS -->
+    @if (gameMode() === 'result') {
+      <div class="result-screen">
+        <div class="result-card">
+          <!-- Header -->
+          <div class="result-header">
+            <h1>¡Partida Finalizada!</h1>
+            @if (wrongAnswers() === 0 && correctAnswers() > 0) {
+              <div class="perfect-badge">👑 ¡PERFECTO! 👑</div>
+            }
+          </div>
+
+          <!-- Puntuación principal -->
+          <div class="final-score">
+            <span class="score-label">Puntuación Final</span>
+            <span class="score-number">{{ currentScore() }}</span>
+          </div>
+
+          <!-- Estadísticas detalladas -->
+          <div class="result-stats">
+            <div class="result-stat-item">
+              <span class="result-stat-icon">✅</span>
+              <span class="result-stat-value">{{ correctAnswers() }}</span>
+              <span class="result-stat-label">Correctas</span>
+            </div>
+            <div class="result-stat-item">
+              <span class="result-stat-icon">❌</span>
+              <span class="result-stat-value">{{ wrongAnswers() }}</span>
+              <span class="result-stat-label">Incorrectas</span>
+            </div>
+            <div class="result-stat-item">
+              <span class="result-stat-icon">🔥</span>
+              <span class="result-stat-value">{{ currentStreak() }}</span>
+              <span class="result-stat-label">Mejor Racha</span>
+            </div>
+          </div>
+
+          <!-- Input de nombre para leaderboard -->
+          @if (showNameInput()) {
+            <div class="name-input-section">
+              <p class="name-input-title">🎉 ¡Entraste al Top 10!</p>
+              <div class="name-input-group">
+                <input 
+                  type="text" 
+                  [(ngModel)]="playerName"
+                  placeholder="Introduce tu nombre"
+                  maxlength="20"
+                  class="name-input">
+                <button class="btn-primary" (click)="saveToLeaderboard()">
+                  Guardar
+                </button>
+              </div>
+            </div>
+          }
+
+          <!-- Acciones -->
+          <div class="result-actions">
+            <button class="btn-primary btn-large" (click)="startGame()">
+              <span>🔄</span>
+              <span>Jugar de Nuevo</span>
+            </button>
+            <button class="btn-secondary" (click)="backToMenu()">
+              Volver al Menú
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- PANTALLA DE LEADERBOARD -->
+    @if (gameMode() === 'leaderboard') {
+      <div class="leaderboard-screen">
+        <div class="leaderboard-card">
+          <div class="leaderboard-header">
+            <button class="btn-back" (click)="backToMenu()">← Volver</button>
+            <h1>🏆 Ranking</h1>
+          </div>
+
+          <div class="leaderboard-list">
+            @if (getLeaderboard().length > 0) {
+              @for (entry of getLeaderboard(); track $index) {
+                <div class="leaderboard-entry" [class.top-three]="$index < 3">
+                  <span class="entry-rank">
+                    @if ($index === 0) { 🥇 }
+                    @else if ($index === 1) { 🥈 }
+                    @else if ($index === 2) { 🥉 }
+                    @else { {{ $index + 1 }} }
+                  </span>
+                  <span class="entry-name">{{ entry.name }}</span>
+                  <span class="entry-score">{{ entry.score }} pts</span>
+                </div>
+              }
+            } @else {
+              <div class="empty-leaderboard">
+                <span class="empty-icon">🎯</span>
+                <p>Aún no hay registros</p>
+                <p class="empty-subtitle">¡Sé el primero en jugar!</p>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- PANTALLA DE LOGROS -->
+    @if (gameMode() === 'achievements') {
+      <div class="achievements-screen">
+        <div class="achievements-card">
+          <div class="achievements-header">
+            <button class="btn-back" (click)="backToMenu()">← Volver</button>
+            <h1>🎖️ Logros</h1>
+          </div>
+
+          @if (stats()) {
+            <div class="achievements-progress">
+              <span>{{ getUnlockedCount() }} / {{ stats()!.achievements.length }} desbloqueados</span>
+            </div>
+
+            <div class="achievements-grid">
+              @for (achievement of stats()!.achievements; track achievement.id) {
+                <div class="achievement-item" [class.unlocked]="achievement.unlocked">
+                  <span class="achievement-icon">{{ achievement.icon }}</span>
+                  <div class="achievement-info">
+                    <h3 class="achievement-title">{{ achievement.title }}</h3>
+                    <p class="achievement-description">{{ achievement.description }}</p>
+                    @if (achievement.unlocked && achievement.unlockedAt) {
+                      <span class="achievement-date">
+                        Desbloqueado: {{ formatDate(achievement.unlockedAt) }}
+                      </span>
+                    }
+                  </div>
+                  @if (!achievement.unlocked) {
+                    <div class="achievement-locked">🔒</div>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- POPUP DE LOGRO DESBLOQUEADO -->
+    @if (showAchievementPopup()) {
+      <div class="achievement-popup">
+        @for (achievement of newAchievements(); track achievement.id) {
+          <div class="popup-content">
+            <span class="popup-icon">🎉</span>
+            <div class="popup-text">
+              <strong>¡Logro Desbloqueado!</strong>
+              <span>{{ achievement.icon }} {{ achievement.title }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+  </section>
+</div>

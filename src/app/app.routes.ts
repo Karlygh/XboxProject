@@ -8,6 +8,7 @@ import { Legal } from './about/legal/legal';
 import { SobreNosotros } from './about/sobre-nosotros/sobre-nosotros';
 import { Contacto } from './about/contacto/contacto';
 import { Noticias } from './noticias/noticias';
+import { Trivia } from './trivia/trivia';
 
 export const routes: Routes = [
     { path: '', component: HomePage },
@@ -19,5 +20,6 @@ export const routes: Routes = [
     { path: 'sobre-nosotros', component: SobreNosotros},
     { path: 'contacto', component: Contacto },
      { path: 'noticias', component: Noticias },
+     { path: 'trivia', component: Trivia },
     { path: '**', redirectTo: '' }, 
 ];
